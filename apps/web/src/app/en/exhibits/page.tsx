@@ -61,7 +61,7 @@ async function getExhibits(): Promise<{ exhibits: Exhibit[]; isFallback: boolean
   let exhibits = await safeSanityFetch<Exhibit[]>(EXHIBITIONS_AND_FAIRS_QUERY, { language: "en" }, { next: { revalidate: 60 } })
 
   if (!exhibits || exhibits.length === 0) {
-    exhibits = await safeSanityFetch<Exhibit[]>(EXHIBITS_QUERY, { language: "it" }, { next: { revalidate: 60 } })
+    exhibits = await safeSanityFetch<Exhibit[]>(EXHIBITIONS_AND_FAIRS_QUERY, { language: "it" }, { next: { revalidate: 60 } })
     return { exhibits: exhibits || [], isFallback: true }
   }
 
