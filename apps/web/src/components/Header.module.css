@@ -1,0 +1,129 @@
+/* Desktop Header */
+.desktopHeader {
+    background-color: #ffffff;
+    color: #0000ff;
+    z-index: 9999;
+}
+
+.logoLink {
+    color: #0000ff;
+}
+
+.navList {
+    margin-right: 0.5em;
+}
+
+.navLink {
+    color: #0000ff;
+}
+
+.navLinkFirstLetter {
+    margin-right: 0.1em;
+}
+
+/* Mobile Menu Button */
+.mobileMenuButton {
+    border-top: 1px solid #0000ff;
+}
+
+.mobileMenuButtonGif {
+    padding-bottom: 2px;
+}
+
+.menuButton {
+    margin-right: 10px;
+}
+
+.menuButtonFirstLetter {
+    margin-right: 0.1em;
+}
+
+/* Mobile Full Screen Menu */
+.mobileMenuContainer {
+    position: fixed;
+    inset: 0;
+    background-color: white;
+    z-index: 9999;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.mobileMenuInner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.mobileMenuList {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 10vh;
+}
+
+.mobileMenuLink {
+    line-height: 1em;
+    color: #0000ff;
+}
+
+.mobileMenuLinkFirstLetter {
+    margin-right: 0.1em;
+}
+
+/* Mobile Menu Footer */
+.mobileFooter {
+    line-height: 1em;
+    margin-top: auto;
+    padding-bottom: 10px;
+}
+
+.mobileFooterItem {
+    line-height: 1em;
+}
+
+.mobileFooterFirstLetter {
+    margin-right: 0.07em;
+}
+
+.mobileFooterGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-top: 10px;
+}
+
+.mobileFooterGridCenter {
+    text-align: center;
+}
+
+.mobileFooterGridRight {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-right: 10px;
+}
+
+.languageInactive {
+    opacity: 0.5;
+}
+
+/* Close Button */
+.closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.closeButtonFirstLetter {
+    margin-right: 0.1em;
+}
+
+/* Spacer for About section in mobile menu */
+.mobileMenuAboutSpacer {
+  height: 10px;
+}
