@@ -15,6 +15,8 @@ interface Artist {
   slug: { current: string }
   featuredImage?: any
   language: string
+  birthYear?: number
+  nationality?: string
 }
 
 const mockArtists: Artist[] = [
@@ -35,10 +37,6 @@ const mockArtists: Artist[] = [
     title: "Giuseppe Verdi",
     slug: { current: "giuseppe-verdi" },
     birthYear: 1968,
-  {
-    _id: "mock-artist-en-3",
-    title: "Giuseppe Verdi",
-    slug: { current: "giuseppe-verdi" },
     language: "en",
   },
 ]
