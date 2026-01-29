@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { ARTIST_BY_SLUG_QUERY, ARTIST_BY_SLUG_FALLBACK_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { ARTIST_BY_SLUG_QUERY, ARTIST_BY_SLUG_FALLBACK_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { FallbackNotice } from "@/components/FallbackNotice"
 import { ArtistGalleryLayout } from "@/components/ArtistGalleryLayout"
@@ -43,7 +43,7 @@ async function getArtist(slug: string): Promise<{ artist: Artist | null; isFallb
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function EnArtistDetailPage({ params }: { params: Promise<{ slug: string }> }) {

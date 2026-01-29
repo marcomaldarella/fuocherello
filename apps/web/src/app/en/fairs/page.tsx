@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { FAIRS_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 const FAIRS_COMBINED_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(dateStart desc){
   _id,
@@ -70,7 +70,7 @@ async function getFairs(): Promise<{ fairs: Fair[]; isFallback: boolean }> {
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function EnFairsPage() {
@@ -91,7 +91,7 @@ export default async function EnFairsPage() {
           {isFallback && <FallbackNotice language="en" />}
 
           <div className="pointer-events-none" style={{ paddingTop: "1.25rem", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] font-black leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 F
               </span>
@@ -119,13 +119,13 @@ export default async function EnFairsPage() {
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
                   </div>
-                  <div className="mt-2 w-full text-[#0000ff] font-black text-[12px] md:text-[13px] leading-tight">
+                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
                     <div className="flex items-baseline justify-between gap-3">
                       <h2 className="uppercase leading-[0.95] first-letter:italic">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                          {fair.title[0]}
+                          {fair.title?.[0] ?? ""}
                         </span>
-                        <span className="lowercase">{fair.title.slice(1)}</span>
+                        <span className="lowercase">{fair.title?.slice(1) ?? ""}</span>
                       </h2>
                       {fair.authorName && <span className="lowercase">{fair.authorName}</span>}
                     </div>

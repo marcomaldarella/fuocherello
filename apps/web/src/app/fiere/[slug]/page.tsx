@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 // Also query old exhibit documents with type="fair" for backward compatibility
 const FAIR_BY_SLUG_COMBINED_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && slug.current == $slug && language == $language][0]{
@@ -73,7 +73,7 @@ async function getFair(slug: string): Promise<Fair | null> {
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function FairDetailPage({ params }: { params: Promise<{ slug: string }> }) {

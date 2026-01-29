@@ -29,7 +29,6 @@ export function BackgroundVideo({ src = "/video-home.mp4" }: { src?: string }) {
         loop
         playsInline
         preload="auto"
-        muted={true}
         // prevent controls and interaction
         tabIndex={-1}
       />

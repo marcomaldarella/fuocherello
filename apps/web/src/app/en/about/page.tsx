@@ -1,5 +1,5 @@
 import { safeSanityFetch } from "@/lib/sanity.client"
-import { SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 
@@ -15,7 +15,7 @@ const aboutParagraphs = [
 ]
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function EnAboutPage() {

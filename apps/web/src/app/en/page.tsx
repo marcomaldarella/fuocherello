@@ -1,22 +1,11 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { SITE_SETTINGS_QUERY, SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { urlFor } from "@/lib/imageUrl"
 import Image from "next/image"
 
 export const revalidate = 60
-
-interface SiteSettings {
-  title: string
-  tagline?: string
-  footerText?: string
-  homeGallery?: Array<{
-    image: any
-    alt?: string
-    caption?: string
-  }>
-}
 
 const mockGalleryImages = [
   {
@@ -60,7 +49,7 @@ export default async function EnHomePage() {
           )}
 
           <div className="mb-16 text-center">
-            <h1 className="text-6xl md:text-7xl font-bold mb-4 italic">{title}</h1>
+            <h1 className="text-6xl md:text-7xl  mb-4 italic">{title}</h1>
             <p className="text-xl text-muted-foreground">{tagline}</p>
           </div>
 

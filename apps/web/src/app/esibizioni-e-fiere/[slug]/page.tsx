@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { EXHIBITION_OR_FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { EXHIBITION_OR_FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { PortableTextRenderer } from "@/components/PortableTextRenderer"
 import Link from "next/link"
@@ -53,7 +53,7 @@ async function getExhibit(slug: string): Promise<Exhibit | null> {
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function ExhibitDetailPage({ params }: { params: Promise<{ slug: string }> }) {

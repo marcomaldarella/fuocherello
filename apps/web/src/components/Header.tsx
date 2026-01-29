@@ -57,7 +57,7 @@ export function Header({ language, fixed = false }: HeaderProps) {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`hover:opacity-70 transition-opacity text-[14px] font-black lowercase ${styles.navLink}`}
+                  className={`hover:opacity-70 transition-opacity text-[14px]  lowercase ${styles.navLink}`}
                 >
                   <span className={`inline-block italic uppercase ${styles.navLinkFirstLetter}`}>{link.label[0]}</span>
                   <span className="lowercase">{link.label.slice(1)}</span>
@@ -83,7 +83,7 @@ export function Header({ language, fixed = false }: HeaderProps) {
         </Link>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className={`text-[16px] font-black lowercase text-[#0000ff] hover:opacity-70 transition-opacity ${styles.menuButton}`}
+          className={`text-[16px]  lowercase text-[#0000ff] hover:opacity-70 transition-opacity ${styles.menuButton}`}
         >
           <span className={`inline-block italic uppercase ${styles.menuButtonFirstLetter}`}>M</span>
           <span className="lowercase">enu</span>
@@ -100,7 +100,7 @@ export function Header({ language, fixed = false }: HeaderProps) {
                   <Link
                     href={link.href}
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`text-[24px] font-black hover:opacity-70 transition-opacity block ${styles.mobileMenuLink}`}
+                    className={`text-[24px]  hover:opacity-70 transition-opacity block ${styles.mobileMenuLink}`}
                   >
                     <span className={`inline-block italic uppercase ${styles.mobileMenuLinkFirstLetter}`}>{link.label[0]}</span>
                     <span className="lowercase">{link.label.slice(1)}</span>
@@ -113,7 +113,7 @@ export function Header({ language, fixed = false }: HeaderProps) {
             <div className={styles.mobileMenuAboutSpacer}></div>
 
             {/* Footer content in mobile menu */}
-            <div className={`flex flex-col gap-0 text-[16px] font-black text-[#0000ff] ${styles.mobileFooter}`}>
+            <div className={`flex flex-col gap-0 text-[16px]  text-[#0000ff] ${styles.mobileFooter}`}>
               <div className={`flex items-baseline ${styles.mobileFooterItem}`}>
                 <span className={`italic uppercase inline-block ${styles.mobileFooterFirstLetter}`}>F</span>
                 <span className="lowercase">uocherello</span>
@@ -150,7 +150,7 @@ export function Header({ language, fixed = false }: HeaderProps) {
             {/* Close button */}
             <button
               onClick={() => setMobileMenuOpen(false)}
-              className={`text-[16px] font-black text-[#0000ff] hover:opacity-70 transition-opacity ${styles.closeButton}`}
+              className={`text-[16px]  text-[#0000ff] hover:opacity-70 transition-opacity ${styles.closeButton}`}
             >
               <span className={`inline-block italic uppercase ${styles.closeButtonFirstLetter}`}>C</span>
               <span className="lowercase">lose</span>

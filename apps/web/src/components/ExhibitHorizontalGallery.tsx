@@ -141,7 +141,7 @@ export function ExhibitHorizontalGallery({
         // stop condition
         if (Math.abs(targetScrollRef.current - currentScrollRef.current) < 0.5) {
           // debug
-          if (process && process.env && process.env.NODE_ENV !== "production") {
+          if (process.env.NODE_ENV !== "production") {
             // eslint-disable-next-line no-console
             console.debug("gallery:animate:stop", { target: targetScrollRef.current, current: currentScrollRef.current })
           }
@@ -160,7 +160,7 @@ export function ExhibitHorizontalGallery({
       if (!e.ctrlKey) {
         e.preventDefault()
         const delta = e.deltaY * 2.5
-        if (process && process.env && process.env.NODE_ENV !== "production") {
+        if (process.env.NODE_ENV !== "production") {
           // eslint-disable-next-line no-console
           console.debug("gallery:onWheel", { delta, target: targetScrollRef.current, current: currentScrollRef.current })
         }
@@ -220,7 +220,7 @@ export function ExhibitHorizontalGallery({
               <img src={urlFor(item.image).url() || "/placeholder.svg"} alt={title} className="w-full h-auto block" />
             ) : (
               <div className="p-6 bg-white text-[#0000ff]">
-                <h1 className="uppercase leading-[0.95] text-[18px] font-black mb-4">
+                <h1 className="uppercase leading-[0.95] text-[18px]  mb-4">
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
                   </span>
@@ -249,7 +249,7 @@ export function ExhibitHorizontalGallery({
       <div className="fixed left-0 right-0 bottom-0 bg-white z-40 flex items-center justify-between py-2 md:py-3" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
         {/* Sinistra: titolo - autore */}
         <div className="flex items-baseline text-[#0000ff]">
-          <h1 className="uppercase leading-[0.95] text-[13px] md:text-[13px] font-black">
+          <h1 className="uppercase leading-[0.95] text-[13px] md:text-[13px] ">
             <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
               {title?.[0] || ""}
             </span>
@@ -258,7 +258,7 @@ export function ExhibitHorizontalGallery({
           {authorName && (
             <>
               <span className="mx-2">–</span>
-              <span className="text-[12px] md:text-[13px] font-black">
+              <span className="text-[12px] md:text-[13px] ">
                 {(() => {
                   const parts = authorName.split(' ')
                   return parts.map((part, i) => (
@@ -278,11 +278,11 @@ export function ExhibitHorizontalGallery({
         {/* Destra: link indietro */}
         <Link
           href={language === "it" ? "/esibizioni-e-fiere" : "/en/exhibits"}
-          className="text-[12px] md:text-[13px] font-black lowercase hover:opacity-70 transition-opacity"
+          className="text-[12px] md:text-[13px]  lowercase hover:opacity-70 transition-opacity"
           style={{ color: '#0000ff' }}
         >
-          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>I</span>
-          <span>ndietro</span>
+          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>{language === "it" ? "I" : "B"}</span>
+          <span>{language === "it" ? "ndietro" : "ack"}</span>
         </Link>
       </div>
       <div ref={innerRef} className="flex" style={{ width: `${setWidth * 5}px`, willChange: "transform" }}>
@@ -332,14 +332,14 @@ export function ExhibitHorizontalGallery({
             <div className="absolute inset-0 bg-white px-[10px] py-8 text-[#0000ff] flex flex-col" style={{ paddingTop: '10vh', marginLeft: '10px' }}>
               {/* Title and Author at top left */}
               <div className="mb-8">
-                <h1 className="uppercase font-black mb-2" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)', lineHeight: '1em' }}>
+                <h1 className="uppercase  mb-2" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)', lineHeight: '1em' }}>
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
                   </span>
                   <span className="lowercase">{title ? title.slice(1) : ""}</span>
                 </h1>
                 {authorName && (
-                  <p className="font-black" style={{ fontSize: 'clamp(1rem, 2.5vw, 2rem)', lineHeight: '1em' }}>
+                  <p className="" style={{ fontSize: 'clamp(1rem, 2.5vw, 2rem)', lineHeight: '1em' }}>
                     {(() => {
                       const parts = authorName.split(' ')
                       return parts.map((part, i) => (

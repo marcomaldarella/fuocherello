@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { EXHIBITIONS_AND_FAIRS_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { EXHIBITIONS_AND_FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { FallbackNotice } from "@/components/FallbackNotice"
@@ -69,7 +69,7 @@ async function getExhibits(): Promise<{ exhibits: Exhibit[]; isFallback: boolean
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function EnExhibitsPage() {
@@ -91,7 +91,7 @@ export default async function EnExhibitsPage() {
           {isFallback && isSanityAvailable && <FallbackNotice language="en" />}
 
           <div className="pt-6 md:pt-8">
-            <h1 className="pointer-events-none text-center text-[#0000ff] font-black leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)] mb-10 min-h-[5rem]">
+            <h1 className="pointer-events-none text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)] mb-10 min-h-[5rem]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 E
               </span>
@@ -119,13 +119,13 @@ export default async function EnExhibitsPage() {
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
                   </div>
-                  <div className="mt-2 w-full text-[#0000ff] font-black text-[12px] md:text-[13px] leading-tight">
+                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
                     <div className="flex items-baseline justify-between gap-3">
                       <h2 className="uppercase leading-[0.95] first-letter:italic">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                          {exhibit.title[0]}
+                          {exhibit.title?.[0] ?? ""}
                         </span>
-                        <span className="lowercase">{exhibit.title.slice(1)}</span>
+                        <span className="lowercase">{exhibit.title?.slice(1) ?? ""}</span>
                       </h2>
                       {exhibit.authorName && <span className="lowercase">{exhibit.authorName}</span>}
                     </div>

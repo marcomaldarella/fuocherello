@@ -87,14 +87,14 @@ export function ExhibitInfoDrawer({ body, language, title, authorName }: Exhibit
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="text-[#0000ff] font-black text-[12px] md:text-[13px] lowercase hover:opacity-70"
+          className="text-[#0000ff]  text-[12px] md:text-[13px] lowercase hover:opacity-70"
         >
           {label}
         </button>
         <Link
           href={backHref}
           aria-label={language === "it" ? "Torna alla lista mostre" : "Back to exhibits list"}
-          className="text-[#0000ff] font-black text-[12px] md:text-[13px] lowercase hover:opacity-70"
+          className="text-[#0000ff]  text-[12px] md:text-[13px] lowercase hover:opacity-70"
         >
           {backLabel}
         </Link>
@@ -115,7 +115,7 @@ export function ExhibitInfoDrawer({ body, language, title, authorName }: Exhibit
             onClick={(e) => e.stopPropagation()}
             className="md:fixed md:right-0 md:top-0 md:h-screen md:w-1/2 fixed bottom-0 left-0 right-0 h-[60vh]
                        bg-white/70 backdrop-blur-md border border-[#0000ff]/15 shadow-none
-                       text-[#0000ff] font-black overflow-y-auto px-3 md:px-4 py-3 text-[11px] md:text-[12px] leading-snug"
+                       text-[#0000ff]  overflow-y-auto px-3 md:px-4 py-3 text-[11px] md:text-[12px] leading-snug"
           >
             {(title || authorName) && (
               <div className="mb-4">

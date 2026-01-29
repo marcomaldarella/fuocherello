@@ -1,6 +1,6 @@
 // ExhibitInfoDrawer removed: exhibit body now rendered as a slide inside the gallery
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { EXHIBITION_OR_FAIR_BY_SLUG_QUERY, EXHIBITION_OR_FAIR_BY_SLUG_FALLBACK_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { EXHIBITION_OR_FAIR_BY_SLUG_QUERY, EXHIBITION_OR_FAIR_BY_SLUG_FALLBACK_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { FallbackNotice } from "@/components/FallbackNotice"
 import { PortableTextRenderer } from "@/components/PortableTextRenderer"
@@ -64,7 +64,7 @@ async function getExhibit(slug: string): Promise<{ exhibit: Exhibit | null; isFa
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function EnExhibitDetailPage({ params }: { params: Promise<{ slug: string }> }) {

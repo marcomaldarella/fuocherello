@@ -25,14 +25,14 @@ export function ArtistGalleryLayout({ name, bio, gallery, pdfUrl, language }: Ar
     <div className="min-h-screen bg-white">
       {/* Header with name and bio - centered */}
       <div className="px-[10px] pt-[10vh] pb-[calc(var(--spacing)*10)] text-center">
-        <h1 className="text-[#0000ff] font-black leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)] mb-[calc(var(--spacing)*6)]">
-          {name.split(' ').map((word, i) => (
+        <h1 className="text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)] mb-[calc(var(--spacing)*6)]">
+          {name.split(' ').filter(Boolean).map((word, i) => (
             <span key={i}>
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {word[0]}
               </span>
               <span className="lowercase">{word.slice(1)}</span>
-              {i < name.split(' ').length - 1 && ' '}
+              {i < name.split(' ').filter(Boolean).length - 1 && ' '}
             </span>
           ))}
         </h1>
@@ -49,12 +49,12 @@ export function ArtistGalleryLayout({ name, bio, gallery, pdfUrl, language }: Ar
               href={pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block text-[#0000ff] font-black text-[12px] md:text-[14px] hover:opacity-70 transition-opacity"
+              className="inline-block text-[#0000ff]  text-[12px] md:text-[14px] hover:opacity-70 transition-opacity"
             >
               <span className="italic inline-block" style={{ marginRight: "0.07em" }}>
-                {isItalian ? "D" : "D"}
+                {isItalian ? "S" : "D"}
               </span>
-              <span>{isItalian ? "ownload portfolio" : "ownload portfolio"}</span>
+              <span>{isItalian ? "carica portfolio" : "ownload portfolio"}</span>
               <span className="ml-2" style={{ fontFamily: "Inter, sans-serif", fontFeatureSettings: '"liga" 1, "calt" 1', fontVariantLigatures: "contextual" }}>↘</span>
             </Link>
           </div>
@@ -99,7 +99,7 @@ export function ArtistGalleryLayout({ name, bio, gallery, pdfUrl, language }: Ar
       <div className="px-[10px] py-[calc(var(--spacing)*10)] text-center">
         <Link
           href={isItalian ? "/artisti" : "/en/artists"}
-          className="text-[#0000ff] font-black text-[12px] md:text-[14px] hover:opacity-70 transition-opacity"
+          className="text-[#0000ff]  text-[12px] md:text-[14px] hover:opacity-70 transition-opacity"
         >
           <span style={{ fontFamily: "Inter, sans-serif", fontFeatureSettings: '"liga" 1, "calt" 1', fontVariantLigatures: "contextual" }}>←</span> {isItalian ? "Torna agli artisti" : "Back to artists"}
         </Link>

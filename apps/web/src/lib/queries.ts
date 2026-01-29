@@ -1,3 +1,19 @@
+export interface SiteSettings {
+  title: string
+  tagline?: string
+  instagramUrl?: string
+  footerText?: string
+  contact?: {
+    address?: string
+    phone?: string
+    email?: string
+  }
+  homeGallery?: Array<{
+    image: any
+    alt?: string
+    caption?: string
+  }>
+}
 export const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0]{
   title,
   tagline,
@@ -195,16 +211,24 @@ export const EXHIBITION_OR_FAIR_BY_SLUG_FALLBACK_QUERY = `*[_type in ["exhibitio
   translationOf
 }`
 
-export const NEWS_QUERY = `*[_type == "newsItem" && language == $language] | order(coalesce(date, dateStart) desc){
+export const NEWS_QUERY = `*[_type == "newsItem" && language == $language] | order(date desc){
   _id,
   title,
-  "date": coalesce(date, dateStart),
+  date,
   summaryLine,
   image,
   externalUrl,
   language,
   translationOf
 }`
+
+export const HOME_CANVAS_IMAGES_QUERY = `*[_type in ["exhibition", "fair"] && language == "it" && defined(gallery)]{
+  gallery[]{
+    "url": image.asset->url,
+    "width": image.asset->metadata.dimensions.width,
+    "height": image.asset->metadata.dimensions.height
+  }
+}.gallery[]`
 
 export const ABOUT_PAGE_QUERY = `*[_type == "aboutPage" && _id == $docId][0]{
   _id,

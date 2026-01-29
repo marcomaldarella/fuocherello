@@ -61,7 +61,7 @@ export default defineType({
       title: "Date",
       type: "date",
       description: "Data dell'elemento news",
-    }),
+      validation: (Rule) => Rule.required(),    }),
 
     defineField({
       name: "summaryLine",

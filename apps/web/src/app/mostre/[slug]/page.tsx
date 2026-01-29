@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { EXHIBITION_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { EXHIBITION_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && slug.current == $slug && language == $language][0]{
   _id,
@@ -70,7 +70,7 @@ async function getExhibition(slug: string): Promise<Exhibition | null> {
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function ExhibitionDetailPage({ params }: { params: Promise<{ slug: string }> }) {

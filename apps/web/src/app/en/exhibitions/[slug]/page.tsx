@@ -1,5 +1,5 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { EXHIBITION_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "@/lib/queries"
+import { EXHIBITION_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Header } from "@/components/Header"
 import { FallbackNotice } from "@/components/FallbackNotice"
 import { PortableTextRenderer } from "@/components/PortableTextRenderer"
@@ -64,7 +64,7 @@ async function getExhibition(slug: string): Promise<{ exhibition: Exhibition | n
 }
 
 async function getSettings() {
-  return await safeSanityFetch(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
+  return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
 export default async function EnExhibitionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
