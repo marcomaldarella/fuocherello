@@ -1,7 +1,0 @@
-{
-  "version": 2,
-  "rootDirectory": "apps/web",
-  "buildCommand": "cd apps/web && pnpm run build",
-  "installCommand": "pnpm install",
-  "outputDirectory": "apps/web/.next"
-}
