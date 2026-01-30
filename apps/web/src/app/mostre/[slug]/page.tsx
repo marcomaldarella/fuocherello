@@ -1,5 +1,8 @@
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
-import { EXHIBITION_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
+import { safeSanityFetch } from "@/lib/sanity.client"
+import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
+import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
+import { ViewModeSwitch } from "@/components/ViewModeSwitch"
+import { ViewModeProvider } from "@/contexts/ViewModeContext"
 
 const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && slug.current == $slug && language == $language][0]{
   _id,
@@ -19,16 +22,36 @@ const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type ==
   language,
   translationOf
 }`
-import { Header } from "@/components/Header"
-import { PortableTextRenderer } from "@/components/PortableTextRenderer"
-import Link from "next/link"
-import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
+
+const RANDOM_EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+  _id,
+  title,
+  slug,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage
+}`
+
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(_updatedAt desc)[0...2]{
+  _id,
+  title,
+  slug,
+  venue,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage
+}`
 
 export const revalidate = 60
 
 interface Exhibition {
   _id: string
   title: string
+  slug: { current: string }
   artistsLine?: string
   authorName?: string
   dateStart?: string
@@ -41,24 +64,6 @@ interface Exhibition {
   body?: any
 }
 
-const mockExhibition: Exhibition = {
-  _id: "mock-exhibition",
-  title: "Arte Contemporanea Italiana",
-  artistsLine: "Marco Rossi, Laura Bianchi, Giuseppe Verdi",
-  dateStart: "2024-03-01",
-  dateEnd: "2024-04-30",
-  body: [
-    {
-      _type: "block",
-      children: [
-        {
-          _type: "span",
-          text: "Una selezione curata delle opere più significative dell'arte contemporanea italiana, esplorando temi attuali attraverso linguaggi visivi innovativi.",
-        },
-      ],
-    },
-  ],
-}
 
 async function getExhibition(slug: string): Promise<Exhibition | null> {
   const result = await safeSanityFetch<Exhibition>(
@@ -73,16 +78,39 @@ async function getSettings() {
   return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
+async function getRandomExhibitions(currentSlug: string): Promise<Exhibition[]> {
+  const result = await safeSanityFetch<Exhibition[]>(
+    RANDOM_EXHIBITIONS_QUERY,
+    { language: "it", currentSlug },
+    { next: { revalidate: 60 } },
+  )
+  return result || []
+}
+
+async function getRandomFairs() {
+  const result = await safeSanityFetch<any[]>(
+    RANDOM_FAIRS_QUERY,
+    { language: "it" },
+    { next: { revalidate: 60 } },
+  )
+  return result || []
+}
+
 export default async function ExhibitionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [exhibition, settings] = await Promise.all([getExhibition(slug), getSettings()])
+  const [exhibition, settings, randomExhibitions, randomFairs] = await Promise.all([
+    getExhibition(slug),
+    getSettings(),
+    getRandomExhibitions(slug),
+    getRandomFairs()
+  ])
 
-  const displayExhibition = exhibition || (!isSanityAvailable ? mockExhibition : null)
+  const displayExhibition = exhibition
 
   if (!displayExhibition) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
-        <Header language="it" />
+
         <main className="flex-1 px-6 py-16">
           <div className="w-screen">
             <p>Mostra non trovata.</p>
@@ -93,17 +121,23 @@ export default async function ExhibitionDetailPage({ params }: { params: Promise
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header language="it" />
-      <main className="flex-1 px-0 py-0">
-        <ExhibitHorizontalGallery
-          gallery={displayExhibition.gallery || []}
-          title={displayExhibition.title}
-          authorName={displayExhibition.authorName || ""}
-          body={displayExhibition.body}
-          language="it"
-        />
-      </main>
-    </div>
+    <ViewModeProvider>
+      <div className="min-h-screen flex flex-col bg-background">
+
+        <main className="flex-1 px-0 py-0">
+          <ExhibitHorizontalGallery
+            gallery={displayExhibition.gallery || []}
+            title={displayExhibition.title}
+            artistsLine={displayExhibition.artistsLine || ""}
+            authorName={displayExhibition.authorName || ""}
+            body={displayExhibition.body}
+            language="it"
+            relatedExhibitions={randomExhibitions}
+            relatedFairs={randomFairs}
+          />
+        </main>
+        <ViewModeSwitch />
+      </div>
+    </ViewModeProvider>
   )
 }

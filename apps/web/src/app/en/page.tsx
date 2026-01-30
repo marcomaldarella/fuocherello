@@ -1,6 +1,6 @@
 import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY, SiteSettings } from "@/lib/queries"
-import { Header } from "@/components/Header"
+
 import { Footer } from "@/components/Footer"
 import { urlFor } from "@/lib/imageUrl"
 import Image from "next/image"
@@ -39,7 +39,7 @@ export default async function EnHomePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header language="en" />
+
       <main className="flex-1 px-6 py-16">
         <div className="max-w-7xl mx-auto">
           {!isSanityAvailable && (

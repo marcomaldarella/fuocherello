@@ -74,6 +74,12 @@ export default defineType({
       description: "Brief biography of the artist",
     }),
     defineField({
+      name: "authorName",
+      title: "Text Author",
+      type: "string",
+      description: "Nome dell'autore del testo biografico",
+    }),
+    defineField({
       name: "gallery",
       title: "Gallery (3 images: 2 square + 1 horizontal)",
       type: "array",

@@ -1,6 +1,6 @@
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
+import { safeSanityFetch } from "@/lib/sanity.client"
 import { EXHIBITIONS_AND_FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
-import { Header } from "@/components/Header"
+
 import { Footer } from "@/components/Footer"
 import { urlFor } from "@/lib/imageUrl"
 import Image from "next/image"
@@ -22,35 +22,6 @@ interface Exhibit {
   featuredImage?: any
 }
 
-const mockExhibits: Exhibit[] = [
-  {
-    _id: "mock-1",
-    _type: "exhibition",
-    title: "Arte Contemporanea Italiana",
-    slug: { current: "arte-contemporanea-italiana" },
-    artistsLine: "Marco Rossi, Laura Bianchi, Giuseppe Verdi",
-    dateStart: "2024-03-01",
-    dateEnd: "2024-04-30",
-  },
-  {
-    _id: "mock-2",
-    _type: "exhibition",
-    title: "Sculture Moderne",
-    slug: { current: "sculture-moderne" },
-    artistsLine: "Anna Ferretti",
-    dateStart: "2024-05-15",
-    dateEnd: "2024-07-15",
-  },
-  {
-    _id: "mock-3",
-    _type: "fair",
-    title: "Fiera Internazionale d'Arte",
-    slug: { current: "fiera-arte-2024" },
-    venue: "Fiera Milano",
-    dateStart: "2024-05-10",
-    dateEnd: "2024-05-12",
-  },
-]
 
 async function getExhibits(): Promise<Exhibit[]> {
   const result = await safeSanityFetch<Exhibit[]>(EXHIBITIONS_AND_FAIRS_QUERY, { language: "it" }, { next: { revalidate: 60 } })
@@ -64,20 +35,13 @@ async function getSettings() {
 export default async function ExhibitsPage() {
   const [exhibits, settings] = await Promise.all([getExhibits(), getSettings()])
 
-  const displayExhibits = exhibits.length > 0 ? exhibits : mockExhibits
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header language="it" />
+
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
-          {!isSanityAvailable && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-md text-sm text-amber-800">
-              Modalità fallback: configura le variabili d'ambiente di Sanity per visualizzare contenuti reali.
-            </div>
-          )}
 
-          <div className="pointer-events-none" style={{ paddingTop: "1.25rem", marginBottom: "2.5rem", minHeight: "5rem" }}>
+          <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
             <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 M
@@ -95,7 +59,7 @@ export default async function ExhibitsPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
-            {displayExhibits.map((exhibit, index) => {
+            {exhibits.map((exhibit, index) => {
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-square bg-muted overflow-hidden">
@@ -113,15 +77,44 @@ export default async function ExhibitsPage() {
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="uppercase leading-[0.95] first-letter:italic">
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {exhibit.title?.[0] ?? ""}
                         </span>
                         <span className="lowercase">{exhibit.title?.slice(1) ?? ""}</span>
                       </h2>
-                      {exhibit.authorName && <span className="lowercase">{exhibit.authorName}</span>}
+                      {exhibit.authorName && (
+                        <span>
+                          {exhibit.authorName!.split(' ').map((word, i) => (
+                            <span key={i}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                {word[0]}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < exhibit.authorName!.split(' ').length - 1 && ' '}
+                            </span>
+                          ))}
+                        </span>
+                      )}
                     </div>
-                    {exhibit.artistsLine && <div className="lowercase opacity-70">{exhibit.artistsLine}</div>}
+                    {exhibit.artistsLine && (
+                      <div className="opacity-70">
+                        {exhibit.artistsLine.split(/,| e | and /).map((name, i, arr) => (
+                          <span key={i}>
+                            {name.trim().split(' ').map((word, j) => (
+                              <span key={j}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                  {word[0]}
+                                </span>
+                                <span className="lowercase">{word.slice(1)}</span>
+                                {j < name.trim().split(' ').length - 1 && ' '}
+                              </span>
+                            ))}
+                            {i < arr.length - 1 && ', '}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     {(exhibit.dateStart || exhibit.dateEnd) && (
                       <div className="lowercase opacity-70">
                         {exhibit.dateStart && new Date(exhibit.dateStart).toLocaleDateString("it-IT")}
@@ -132,14 +125,6 @@ export default async function ExhibitsPage() {
                   </div>
                 </div>
               )
-
-              if (!isSanityAvailable) {
-                return (
-                  <div key={exhibit._id} className="block">
-                    {content}
-                  </div>
-                )
-              }
 
               return (
                 <Link

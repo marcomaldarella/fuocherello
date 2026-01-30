@@ -4,10 +4,23 @@ import Link from "next/link"
 import { urlFor } from "@/lib/imageUrl"
 import { PortableTextRenderer } from "@/components/PortableTextRenderer"
 import { useEffect, useMemo, useRef, useState } from "react"
+import { useViewMode } from "@/contexts/ViewModeContext"
 
 interface GalleryItem {
   image: any
   caption?: string
+}
+
+interface RelatedItem {
+  _id: string
+  title: string
+  slug: { current: string }
+  artistsLine?: string
+  authorName?: string
+  venue?: string
+  dateStart?: string
+  dateEnd?: string
+  featuredImage?: any
 }
 
 interface ExhibitHorizontalGalleryProps {
@@ -19,6 +32,8 @@ interface ExhibitHorizontalGalleryProps {
   featuredImage?: any
   gallery?: GalleryItem[]
   language?: "it" | "en"
+  relatedExhibitions?: RelatedItem[]
+  relatedFairs?: RelatedItem[]
 }
 
 export function ExhibitHorizontalGallery({
@@ -31,7 +46,12 @@ export function ExhibitHorizontalGallery({
   gallery,
   language = "it",
   body,
+  relatedExhibitions = [],
+  relatedFairs = [],
 }: ExhibitHorizontalGalleryProps & { body?: any }) {
+  const { viewMode } = useViewMode()
+  const locale = language === "en" ? "en-US" : "it-IT"
+
   const baseItems = useMemo(() => {
     const arr: any[] = []
     if (featuredImage) arr.push({ type: "image", image: featuredImage })
@@ -40,6 +60,24 @@ export function ExhibitHorizontalGallery({
     if (body) arr.push({ type: "text" })
     return arr
   }, [featuredImage, gallery, body])
+
+  const renderNameList = (names?: string) => {
+    if (!names) return null
+    return names.split(/,| e | and /).map((name, i, arr) => (
+      <span key={i}>
+        {name.trim().split(" ").map((word, j) => (
+          <span key={j}>
+            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+              {word[0]}
+            </span>
+            <span className="lowercase">{word.slice(1)}</span>
+            {j < name.trim().split(" ").length - 1 && " "}
+          </span>
+        ))}
+        {i < arr.length - 1 && ", "}
+      </span>
+    ))
+  }
 
   // Duplicate set 5x for extended scroll range without wrapping issues
   const slides = useMemo(() => [...baseItems, ...baseItems, ...baseItems, ...baseItems, ...baseItems], [baseItems])
@@ -86,7 +124,7 @@ export function ExhibitHorizontalGallery({
 
   useEffect(() => {
     const el = scrollerRef.current
-    if (isMobile) return // mobile uses native vertical flow
+    if (isMobile || viewMode === "vertical") return // mobile or vertical mode uses native vertical flow
     if (!el || baseItems.length === 0) return
 
     const compute = () => {
@@ -96,7 +134,7 @@ export function ExhibitHorizontalGallery({
       const total = current.reduce((acc, w) => acc + w, 0)
       const prevTotal = setWidth
       setSetWidth(total)
-      
+
       // Only reset position on first compute or if not animating
       if (prevTotal === 0 || !isAnimatingRef.current) {
         // posiziona all'inizio del set centrale for transform-based flow (center of 5 sets = 2.5)
@@ -187,14 +225,14 @@ export function ExhibitHorizontalGallery({
       wheelTickingRef.current = false
       scrollTickingRef.current = false
     }
-  }, [baseItems.length, setWidth, widths])
+  }, [baseItems.length, setWidth, widths, viewMode])
 
 
   // Gestisce larghezze per immagine in base all'aspect ratio naturale
   const handleLoaded = (baseIdx: number) => (info: { naturalWidth: number; naturalHeight: number }) => {
     // Skip width updates if animating to prevent layout shifts
     if (isAnimatingRef.current) return
-    
+
     const h = window.innerHeight
     const w = (info.naturalWidth / info.naturalHeight) * h
     setWidths((prev) => {
@@ -210,31 +248,264 @@ export function ExhibitHorizontalGallery({
   }
 
   if (!mounted) return null
-  
-  if (isMobile) {
+
+  // Use vertical layout for mobile OR when viewMode is "vertical"
+  if (isMobile || viewMode === "vertical") {
+    // For mobile: title/author at top, images, then text at bottom
+    const verticalItems = isMobile ? [
+      ...(title || artistsLine ? [{ type: "header" }] : []),
+      ...baseItems.filter(item => item.type === "image"),
+      ...(body ? [{ type: "text" }] : [])
+    ] : baseItems; // For desktop vertical, use baseItems as is (images then text)
+
     return (
-      <div className="w-screen flex flex-col overflow-y-auto no-scrollbar">
-        {baseItems.map((item, idx) => (
-          <div key={idx} className="w-full px-[10px] flex-shrink-0 relative">
+      <div className="w-full h-screen overflow-y-scroll animate-fade-in" style={{ paddingBottom: '120px' }}>
+        {verticalItems.map((item, idx) => (
+          <div key={idx} className="w-full" style={{ padding: '0 1em', marginBottom: item.type === "image" ? '1em' : '0' }}>
             {item.type === "image" ? (
-              <img src={urlFor(item.image).url() || "/placeholder.svg"} alt={title} className="w-full h-auto block" />
-            ) : (
-              <div className="p-6 bg-white text-[#0000ff]">
-                <h1 className="uppercase leading-[0.95] text-[18px]  mb-4">
+              <img
+                src={urlFor(item.image).width(2400).url() || "/placeholder.svg"}
+                alt={title}
+                className="w-full h-auto block animate-fade-in"
+                style={{ maxWidth: '100%', height: 'auto' }}
+              />
+            ) : item.type === "header" ? (
+              <div className="w-full py-6 text-[#0000ff]" style={{ paddingTop: '6em', paddingBottom: '2em' }}>
+                <h1 className="uppercase leading-[0.95] text-[28px] mb-3">
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
                   </span>
-                  <span>{title ? title.slice(1) : ""}</span>
+                  <span className="lowercase">{title ? title.slice(1) : ""}</span>
                 </h1>
-                {body && <PortableTextRenderer value={body} />}
+                {artistsLine && (
+                  <div className="text-[16px] opacity-70 leading-tight">{renderNameList(artistsLine)}</div>
+                )}
               </div>
-            )}
+            ) : item.type === "text" ? (
+              <div className="w-full max-w-[800px] mx-auto py-6 text-[#0000ff]" style={{ paddingTop: '2em', paddingBottom: '4em' }}>
+                {!isMobile && (
+                  <>
+                    <h1 className="uppercase leading-[0.95] text-[24px] mb-6">
+                      <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+                        {title?.[0] || ""}
+                      </span>
+                      <span className="lowercase">{title ? title.slice(1) : ""}</span>
+                    </h1>
+                    {artistsLine && (
+                      <div className="text-[15px] opacity-70 leading-tight mb-3">{renderNameList(artistsLine)}</div>
+                    )}
+                  </>
+                )}
+                {body && (
+                  <div className="text-[15px] leading-relaxed">
+                    <PortableTextRenderer value={body} />
+                  </div>
+                )}
+                {authorName && (
+                  <div className="mt-6 text-[13px] opacity-70">
+                    <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
+                    {authorName.split(' ').map((word, i) => (
+                      <span key={i}>
+                        <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                          {word[0]}
+                        </span>
+                        <span className="lowercase">{word.slice(1)}</span>
+                        {i < authorName.split(' ').length - 1 && ' '}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
         ))}
-        <style jsx global>{`
-          .no-scrollbar::-webkit-scrollbar { display: none; }
-          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        `}</style>
+
+        {relatedExhibitions.length > 0 && (
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "3em" }}>
+            <h2 className="text-[#0000ff] uppercase text-[18px] mb-4">
+              <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+                {language === "en" ? "O" : "A"}
+              </span>
+              <span className="lowercase">{language === "en" ? "ther exhibitions" : "ltre mostre"}</span>
+            </h2>
+            <div
+              className="grid grid-cols-1 md:grid-cols-2"
+              style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
+            >
+              {relatedExhibitions.map((item) => (
+                <Link
+                  key={item._id}
+                  href={`${language === "en" ? "/en/exhibitions" : "/mostre"}/${item.slug.current}`}
+                  className="block hover:opacity-90 transition-opacity"
+                >
+                  <div className="w-full">
+                    <div className="relative w-full aspect-[4/3] bg-muted overflow-hidden">
+                      <Image
+                        src={
+                          item.featuredImage
+                            ? urlFor(item.featuredImage).width(1200).height(1200).fit("crop").url()
+                            : `/placeholder.svg?height=800&width=800`
+                        }
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      />
+                    </div>
+                    <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <h3 className="text-[16px] md:text-[17px] uppercase leading-[0.95] whitespace-nowrap">
+                          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+                            {item.title?.[0] ?? ""}
+                          </span>
+                          <span className="lowercase">{item.title?.slice(1) ?? ""}</span>
+                        </h3>
+                        {item.authorName && (
+                          <span>
+                            {item.authorName.split(" ").map((word, i) => (
+                              <span key={i}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                  {word[0]}
+                                </span>
+                                <span className="lowercase">{word.slice(1)}</span>
+                                {i < item.authorName!.split(" ").length - 1 && " "}
+                              </span>
+                            ))}
+                          </span>
+                        )}
+                      </div>
+                      {item.artistsLine && (
+                        <div className="opacity-70">
+                          {item.artistsLine.split(/,| e | and /).map((name, i, arr) => (
+                            <span key={i}>
+                              {name.trim().split(" ").map((word, j) => (
+                                <span key={j}>
+                                  <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                    {word[0]}
+                                  </span>
+                                  <span className="lowercase">{word.slice(1)}</span>
+                                  {j < name.trim().split(" ").length - 1 && " "}
+                                </span>
+                              ))}
+                              {i < arr.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {(item.dateStart || item.dateEnd) && (
+                        <div className="lowercase opacity-70">
+                          {item.dateStart && new Date(item.dateStart).toLocaleDateString(locale)}
+                          {item.dateStart && item.dateEnd && " - "}
+                          {item.dateEnd && new Date(item.dateEnd).toLocaleDateString(locale)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {relatedFairs.length > 0 && (
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "3em" }}>
+            <h2 className="text-[#0000ff] uppercase text-[18px] mb-4">
+              <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+                {language === "en" ? "O" : "A"}
+              </span>
+              <span className="lowercase">{language === "en" ? "ther fairs" : "ltre fiere"}</span>
+            </h2>
+            <div
+              className="grid grid-cols-1 md:grid-cols-2"
+              style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
+            >
+              {relatedFairs.map((item) => (
+                <Link
+                  key={item._id}
+                  href={`${language === "en" ? "/en/fairs" : "/fiere"}/${item.slug.current}`}
+                  className="block hover:opacity-90 transition-opacity"
+                >
+                  <div className="w-full">
+                    <div className="relative w-full aspect-[4/3] bg-muted overflow-hidden">
+                      <Image
+                        src={
+                          item.featuredImage
+                            ? urlFor(item.featuredImage).width(1200).height(1200).fit("crop").url()
+                            : `/placeholder.svg?height=800&width=800`
+                        }
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      />
+                    </div>
+                    <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight">
+                      <div className="flex items-baseline justify-between gap-3">
+                        <h3 className="text-[16px] md:text-[17px] uppercase leading-[0.95]">
+                          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+                            {item.title?.[0] ?? ""}
+                          </span>
+                          <span className="lowercase">{item.title?.slice(1) ?? ""}</span>
+                        </h3>
+                        {item.authorName && (
+                          <span>
+                            {item.authorName.split(" ").map((word, i) => (
+                              <span key={i}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                  {word[0]}
+                                </span>
+                                <span className="lowercase">{word.slice(1)}</span>
+                                {i < item.authorName!.split(" ").length - 1 && " "}
+                              </span>
+                            ))}
+                          </span>
+                        )}
+                      </div>
+                      {item.venue && (
+                        <div className="opacity-70">
+                          {item.venue.split(' ').map((word, i) => (
+                            <span key={i}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                {word[0]}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < item.venue!.split(' ').length - 1 && ' '}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {item.artistsLine && (
+                        <div className="opacity-70">
+                          {item.artistsLine.split(/,| e | and /).map((name, i, arr) => (
+                            <span key={i}>
+                              {name.trim().split(' ').map((word, j) => (
+                                <span key={j}>
+                                  <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                    {word[0]}
+                                  </span>
+                                  <span className="lowercase">{word.slice(1)}</span>
+                                  {j < name.trim().split(' ').length - 1 && ' '}
+                                </span>
+                              ))}
+                              {i < arr.length - 1 && ', '}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {(item.dateStart || item.dateEnd) && (
+                        <div className="lowercase opacity-70">
+                          {item.dateStart && new Date(item.dateStart).toLocaleDateString(locale)}
+                          {item.dateStart && item.dateEnd && " - "}
+                          {item.dateEnd && new Date(item.dateEnd).toLocaleDateString(locale)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     )
   }
@@ -242,11 +513,11 @@ export function ExhibitHorizontalGallery({
   return (
     <div
       ref={scrollerRef}
-      className="fixed top-0 left-0 w-screen h-[100svh] pb-14 overflow-hidden overflow-y-hidden no-scrollbar"
+      className="fixed top-0 left-0 w-screen h-[100svh] pb-14 overflow-hidden overflow-y-hidden no-scrollbar animate-fade-in"
       style={{ zIndex: 10 }}
     >
       {/* Barra inferiore: titolo - autore (a sinistra) + link indietro (a destra) */}
-      <div className="fixed left-0 right-0 bottom-0 bg-white z-40 flex items-center justify-between py-2 md:py-3" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+      <div className="fixed left-0 right-0 bottom-0 bg-white z-40 flex items-center justify-between py-2 md:py-3" style={{ paddingLeft: '10px', paddingRight: '10px', borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
         {/* Sinistra: titolo - autore */}
         <div className="flex items-baseline text-[#0000ff]">
           <h1 className="uppercase leading-[0.95] text-[13px] md:text-[13px] ">
@@ -255,23 +526,10 @@ export function ExhibitHorizontalGallery({
             </span>
             <span className="lowercase">{title ? title.slice(1) : ""}</span>
           </h1>
-          {authorName && (
+          {artistsLine && (
             <>
               <span className="mx-2">–</span>
-              <span className="text-[12px] md:text-[13px] ">
-                {(() => {
-                  const parts = authorName.split(' ')
-                  return parts.map((part, i) => (
-                    <span key={i}>
-                      <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                        {part[0] || ""}
-                      </span>
-                      <span className="lowercase">{part.slice(1)}</span>
-                      {i < parts.length - 1 && ' '}
-                    </span>
-                  ))
-                })()}
-              </span>
+              <span className="text-[12px] md:text-[13px] ">{renderNameList(artistsLine)}</span>
             </>
           )}
         </div>
@@ -305,7 +563,7 @@ export function ExhibitHorizontalGallery({
                         src={urlFor(item.image).url() || "/placeholder.svg"}
                         alt={title}
                         fill
-                        className="object-contain"
+                        className="object-contain animate-fade-in"
                         priority={idx < baseItems.length}
                         loading="eager"
                         sizes="100vw"
@@ -338,20 +596,9 @@ export function ExhibitHorizontalGallery({
                   </span>
                   <span className="lowercase">{title ? title.slice(1) : ""}</span>
                 </h1>
-                {authorName && (
-                  <p className="" style={{ fontSize: 'clamp(1rem, 2.5vw, 2rem)', lineHeight: '1em' }}>
-                    {(() => {
-                      const parts = authorName.split(' ')
-                      return parts.map((part, i) => (
-                        <span key={i}>
-                          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                            {part[0] || ""}
-                          </span>
-                          <span className="lowercase">{part.slice(1)}</span>
-                          {i < parts.length - 1 && ' '}
-                        </span>
-                      ))
-                    })()}
+                {artistsLine && (
+                  <p className="opacity-70" style={{ fontSize: 'clamp(0.9rem, 2vw, 1.5rem)', lineHeight: '1.1em' }}>
+                    {renderNameList(artistsLine)}
                   </p>
                 )}
               </div>
@@ -362,6 +609,20 @@ export function ExhibitHorizontalGallery({
                   {body && <PortableTextRenderer value={body} />}
                 </div>
               </div>
+              {authorName && (
+                <div className="mt-6 text-[13px] opacity-70 ml-[10px] md:ml-[20px]">
+                  <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
+                  {authorName.split(' ').map((word, i) => (
+                    <span key={i}>
+                      <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                        {word[0]}
+                      </span>
+                      <span className="lowercase">{word.slice(1)}</span>
+                      {i < authorName.split(' ').length - 1 && ' '}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )

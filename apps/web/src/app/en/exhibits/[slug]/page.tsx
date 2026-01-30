@@ -1,11 +1,17 @@
 // ExhibitInfoDrawer removed: exhibit body now rendered as a slide inside the gallery
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
+import { safeSanityFetch } from "@/lib/sanity.client"
 import { EXHIBITION_OR_FAIR_BY_SLUG_QUERY, EXHIBITION_OR_FAIR_BY_SLUG_FALLBACK_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
-import { Header } from "@/components/Header"
+
 import { FallbackNotice } from "@/components/FallbackNotice"
-import { PortableTextRenderer } from "@/components/PortableTextRenderer"
 import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
-import Link from "next/link"
+
+const RANDOM_EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+  _id, title, slug, artistsLine, authorName, dateStart, dateEnd, featuredImage
+}`
+
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+  _id, title, slug, venue, artistsLine, authorName, dateStart, dateEnd, featuredImage
+}`
 
 export const revalidate = 60
 
@@ -27,26 +33,6 @@ interface Exhibit {
   language: string
 }
 
-const mockExhibit: Exhibit = {
-  _id: "mock-exhibit-en",
-  _type: "exhibition",
-  title: "Italian Contemporary Art",
-  artistsLine: "Marco Rossi, Laura Bianchi, Giuseppe Verdi",
-  dateStart: "2024-03-01",
-  dateEnd: "2024-04-30",
-  body: [
-    {
-      _type: "block",
-      children: [
-        {
-          _type: "span",
-          text: "A curated selection of the most significant works of Italian contemporary art, exploring current themes through innovative visual languages.",
-        },
-      ],
-    },
-  ],
-  language: "en",
-}
 
 async function getExhibit(slug: string): Promise<{ exhibit: Exhibit | null; isFallback: boolean }> {
   let exhibit = await safeSanityFetch<Exhibit>(
@@ -67,16 +53,26 @@ async function getSettings() {
   return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
+async function getRandomExhibitions(currentSlug: string) {
+  const result = await safeSanityFetch<any[]>(RANDOM_EXHIBITIONS_QUERY, { language: "en", currentSlug }, { next: { revalidate: 60 } })
+  return result || []
+}
+
+async function getRandomFairs(currentSlug: string) {
+  const result = await safeSanityFetch<any[]>(RANDOM_FAIRS_QUERY, { language: "en", currentSlug }, { next: { revalidate: 60 } })
+  return result || []
+}
+
 export default async function EnExhibitDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [{ exhibit, isFallback }, settings] = await Promise.all([getExhibit(slug), getSettings()])
+  const [{ exhibit, isFallback }, settings, randomExhibitions, randomFairs] = await Promise.all([getExhibit(slug), getSettings(), getRandomExhibitions(slug), getRandomFairs(slug)])
 
-  const displayExhibit = exhibit || (!isSanityAvailable ? mockExhibit : null)
+  const displayExhibit = exhibit
 
   if (!displayExhibit) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
-        <Header language="en" />
+
         <main className="flex-1 px-6 py-16">
           <div className="max-w-7xl mx-auto">
             <p>Exhibit not found.</p>
@@ -89,16 +85,10 @@ export default async function EnExhibitDetailPage({ params }: { params: Promise<
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header language="en" />
+
       <main className="flex-1 px-0 py-0">
         <div className="w-screen">
-          {!isSanityAvailable && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-md text-sm text-amber-800">
-              Fallback mode: configure Sanity environment variables to view real content.
-            </div>
-          )}
-
-          {isFallback && isSanityAvailable && <FallbackNotice language="en" />}
+          {isFallback && <FallbackNotice language="en" />}
 
           <ExhibitHorizontalGallery
             title={displayExhibit.title}
@@ -110,6 +100,8 @@ export default async function EnExhibitDetailPage({ params }: { params: Promise<
             gallery={displayExhibit.gallery}
             body={displayExhibit.body}
             language="en"
+            relatedExhibitions={randomExhibitions}
+            relatedFairs={randomFairs}
           />
 
           {/* Testo incluso come ultima slide (drawer rimosso) */}

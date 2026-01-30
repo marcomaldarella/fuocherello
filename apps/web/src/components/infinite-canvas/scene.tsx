@@ -1,4 +1,4 @@
-import { KeyboardControls, useKeyboardControls, useProgress } from "@react-three/drei";
+import { KeyboardControls, Stats, useKeyboardControls, useProgress } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as React from "react";
 import * as THREE from "three";
@@ -101,7 +101,6 @@ function MediaPlane({
     }
 
     const cam = cameraGridRef.current;
-    if (!cam) return;
     const dist = Math.max(Math.abs(chunkCx - cam.cx), Math.abs(chunkCy - cam.cy), Math.abs(chunkCz - cam.cz));
     const absDepth = Math.abs(position.z - cam.camZ);
 
@@ -414,6 +413,11 @@ function SceneController({ media, onTextureProgress }: { media: MediaItem[]; onT
     const s = state.current;
     const now = performance.now();
 
+    // Movimento automatico iniziale per attivare il canvas
+    if (now < 3000) {
+      s.targetVel.z += Math.sin(now * 0.001) * 0.1;
+    }
+
     const { forward, backward, left, right, up, down } = getKeys();
     if (forward) s.targetVel.z -= KEYBOARD_SPEED;
     if (backward) s.targetVel.z += KEYBOARD_SPEED;
@@ -544,6 +548,7 @@ export function InfiniteCanvasScene({
           <color attach="background" args={[backgroundColor]} />
           <fog attach="fog" args={[fogColor, fogNear, fogFar]} />
           <SceneController media={media} onTextureProgress={onTextureProgress} />
+          {showFps && <Stats className={styles.stats} />}
         </Canvas>
 
         {showControls && (

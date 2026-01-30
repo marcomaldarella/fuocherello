@@ -1,10 +1,35 @@
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
+import { safeSanityFetch } from "@/lib/sanity.client"
 import { FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
-import { Header } from "@/components/Header"
+
 import { FallbackNotice } from "@/components/FallbackNotice"
 import { PortableTextRenderer } from "@/components/PortableTextRenderer"
 import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
+import { ViewModeSwitch } from "@/components/ViewModeSwitch"
+import { ViewModeProvider } from "@/contexts/ViewModeContext"
 import Link from "next/link"
+
+const RANDOM_EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $language] | order(_updatedAt desc)[0...2]{
+  _id,
+  title,
+  slug,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage
+}`
+
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+  _id,
+  title,
+  slug,
+  venue,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage
+}`
 
 export const revalidate = 60
 
@@ -25,25 +50,6 @@ interface Fair {
   language: string
 }
 
-const mockFair: Fair = {
-  _id: "mock-fair-en",
-  title: "International Art Fair",
-  venue: "Milan Fair",
-  dateStart: "2024-05-10",
-  dateEnd: "2024-05-12",
-  body: [
-    {
-      _type: "block",
-      children: [
-        {
-          _type: "span",
-          text: "The most important contemporary art fair in Italy, with exhibitors from around the world.",
-        },
-      ],
-    },
-  ],
-  language: "en",
-}
 
 async function getFair(slug: string): Promise<{ fair: Fair | null; isFallback: boolean }> {
   let fair = await safeSanityFetch<Fair>(
@@ -64,16 +70,34 @@ async function getSettings() {
   return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
+async function getRandomExhibitions() {
+  const result = await safeSanityFetch<any[]>(
+    RANDOM_EXHIBITIONS_QUERY,
+    { language: "en" },
+    { next: { revalidate: 60 } },
+  )
+  return result || []
+}
+
+async function getRandomFairs(currentSlug: string) {
+  const result = await safeSanityFetch<any[]>(
+    RANDOM_FAIRS_QUERY,
+    { language: "en", currentSlug },
+    { next: { revalidate: 60 } },
+  )
+  return result || []
+}
+
 export default async function EnFairDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [{ fair, isFallback }, settings] = await Promise.all([getFair(slug), getSettings()])
+  const [{ fair, isFallback }, settings, randomExhibitions, randomFairs] = await Promise.all([getFair(slug), getSettings(), getRandomExhibitions(), getRandomFairs(slug)])
 
-  const displayFair = fair || (!isSanityAvailable ? mockFair : null)
+  const displayFair = fair
 
   if (!displayFair) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
-        <Header language="en" />
+
         <main className="flex-1 px-6 py-16">
           <div className="max-w-7xl mx-auto">
             <p>Fair not found.</p>
@@ -87,18 +111,23 @@ export default async function EnFairDetailPage({ params }: { params: Promise<{ s
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Header language="en" />
-      {isFallback && <FallbackNotice language="en" />}
-      <main className="flex-1 px-0 py-0">
-        <ExhibitHorizontalGallery
-          gallery={displayFair.gallery || []}
-          title={displayFair.title}
-          authorName={displayFair.authorName || displayFair.venue || ""}
-          body={displayFair.body}
-          language="en"
-        />
-      </main>
-    </div>
+    <ViewModeProvider>
+      <div className="min-h-screen flex flex-col bg-background">
+        <ViewModeSwitch />
+        {isFallback && <FallbackNotice language="en" />}
+        <main className="flex-1 px-0 py-0">
+          <ExhibitHorizontalGallery
+            gallery={displayFair.gallery || []}
+            title={displayFair.title}
+            artistsLine={displayFair.artistsLine || ""}
+            authorName={displayFair.authorName || ""}
+            body={displayFair.body}
+            language="en"
+            relatedExhibitions={randomExhibitions}
+            relatedFairs={randomFairs}
+          />
+        </main>
+      </div>
+    </ViewModeProvider>
   )
 }

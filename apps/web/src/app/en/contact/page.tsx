@@ -1,6 +1,6 @@
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
-import { Header } from "@/components/Header"
+
 import { Footer } from "@/components/Footer"
 
 export const revalidate = 60
@@ -16,7 +16,7 @@ export default async function EnContactPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header language="en" />
+
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16 flex items-center justify-center">
         <div className="w-full max-w-4xl">
           <div className="mx-auto pt-1-25 mb-2-5">

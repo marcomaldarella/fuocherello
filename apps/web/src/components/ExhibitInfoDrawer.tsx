@@ -126,7 +126,19 @@ export function ExhibitInfoDrawer({ body, language, title, authorName }: Exhibit
                       <span className="lowercase">{title.slice(1)}</span>
                     </div>
                   )}
-                  {authorName && <div className="lowercase opacity-70">{authorName}</div>}
+                  {authorName && (
+                    <div className="opacity-70 flex items-center">
+                      {authorName.split(' ').map((word, i) => (
+                        <span key={i}>
+                          <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                            {word[0]}
+                          </span>
+                          <span className="lowercase">{word.slice(1)}</span>
+                          {i < authorName.split(' ').length - 1 && ' '}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}

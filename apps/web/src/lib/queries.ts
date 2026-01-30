@@ -57,7 +57,7 @@ export const EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $langua
   translationOf
 }`
 
-export const FAIRS_QUERY = `*[_type == "fair" && language == $language] | order(dateStart desc){
+export const FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(dateStart desc){
   _id,
   title,
   slug,
@@ -109,7 +109,7 @@ export const EXHIBIT_BY_SLUG_QUERY = `*[_type == "exhibit" && slug.current == $s
   translationOf
 }`
 
-export const EXHIBITION_BY_SLUG_QUERY = `*[_type == "exhibition" && slug.current == $slug && language == $language][0]{
+export const EXHIBITION_BY_SLUG_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && slug.current == $slug && language == $language][0]{
   _id,
   title,
   slug,
@@ -128,7 +128,7 @@ export const EXHIBITION_BY_SLUG_QUERY = `*[_type == "exhibition" && slug.current
   translationOf
 }`
 
-export const FAIR_BY_SLUG_QUERY = `*[_type == "fair" && slug.current == $slug && language == $language][0]{
+export const FAIR_BY_SLUG_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && slug.current == $slug && language == $language][0]{
   _id,
   title,
   slug,
@@ -265,6 +265,8 @@ export const ARTISTS_QUERY = `*[_type == "artist" && language == $language] | or
   title,
   slug,
   featuredImage,
+  birthYear,
+  nationality,
   language,
   translationOf
 }`
@@ -274,6 +276,7 @@ export const ARTIST_BY_SLUG_QUERY = `*[_type == "artist" && slug.current == $slu
   title,
   slug,
   bio,
+  authorName,
   gallery[]{
     asset,
     orientation,
@@ -285,7 +288,7 @@ export const ARTIST_BY_SLUG_QUERY = `*[_type == "artist" && slug.current == $slu
   translationOf
 }`
 
-export const ARTIST_BY_SLUG_FALLBACK_QUERY = `*[_type == "artist" && slug.current == $slug && language == "it"][0]{
+export const ARTIST_BY_SLUG_FALLBACK_QUERY = `*[_type == "artist" && slug.current == $slug][0]{
   _id,
   title,
   slug,

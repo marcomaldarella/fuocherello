@@ -1,9 +1,16 @@
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
+import { safeSanityFetch } from "@/lib/sanity.client"
 import { EXHIBITION_OR_FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
-import { Header } from "@/components/Header"
-import { PortableTextRenderer } from "@/components/PortableTextRenderer"
-import Link from "next/link"
+
 import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
+
+const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+  _id, title, slug, artistsLine, authorName, dateStart, dateEnd, featuredImage
+}`
+
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+  _id, title, slug, venue, artistsLine, authorName, dateStart, dateEnd, featuredImage
+}`
+
 export const revalidate = 60
 
 interface Exhibit {
@@ -23,25 +30,6 @@ interface Exhibit {
   body?: any
 }
 
-const mockExhibit: Exhibit = {
-  _id: "mock-exhibit",
-  _type: "exhibition",
-  title: "Arte Contemporanea Italiana",
-  artistsLine: "Marco Rossi, Laura Bianchi, Giuseppe Verdi",
-  dateStart: "2024-03-01",
-  dateEnd: "2024-04-30",
-  body: [
-    {
-      _type: "block",
-      children: [
-        {
-          _type: "span",
-          text: "Una selezione curata delle opere più significative dell'arte contemporanea italiana, che esplora tematiche attuali attraverso linguaggi visivi innovativi.",
-        },
-      ],
-    },
-  ],
-}
 
 async function getExhibit(slug: string): Promise<Exhibit | null> {
   const result = await safeSanityFetch<Exhibit>(
@@ -56,16 +44,26 @@ async function getSettings() {
   return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
+async function getRandomExhibitions(currentSlug: string) {
+  const result = await safeSanityFetch<any[]>(RANDOM_EXHIBITIONS_QUERY, { language: "it", currentSlug }, { next: { revalidate: 60 } })
+  return result || []
+}
+
+async function getRandomFairs(currentSlug: string) {
+  const result = await safeSanityFetch<any[]>(RANDOM_FAIRS_QUERY, { language: "it", currentSlug }, { next: { revalidate: 60 } })
+  return result || []
+}
+
 export default async function ExhibitDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [exhibit, settings] = await Promise.all([getExhibit(slug), getSettings()])
+  const [exhibit, settings, randomExhibitions, randomFairs] = await Promise.all([getExhibit(slug), getSettings(), getRandomExhibitions(slug), getRandomFairs(slug)])
 
-  const displayExhibit = exhibit || (!isSanityAvailable ? mockExhibit : null)
+  const displayExhibit = exhibit
 
   if (!displayExhibit) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
-        <Header language="it" />
+
         <main className="flex-1 px-6 py-16">
           <div className="w-screen">
             <p>Esibizione non trovata.</p>
@@ -78,15 +76,9 @@ export default async function ExhibitDetailPage({ params }: { params: Promise<{ 
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header language="it" />
+
       <main className="flex-1 px-0 py-0">
         <div className="w-screen">
-          {!isSanityAvailable && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-md text-sm text-amber-800">
-              Modalità fallback: configura le variabili d'ambiente di Sanity per visualizzare contenuti reali.
-            </div>
-          )}
-
           <ExhibitHorizontalGallery
             title={displayExhibit.title}
             authorName={(displayExhibit as any).authorName}
@@ -97,6 +89,8 @@ export default async function ExhibitDetailPage({ params }: { params: Promise<{ 
             gallery={displayExhibit.gallery}
             body={displayExhibit.body}
             language="it"
+            relatedExhibitions={randomExhibitions}
+            relatedFairs={randomFairs}
           />
 
           {/* Testo ora incluso come ultima slide nella galleria (mobile: scroll verticale) */}

@@ -31,7 +31,7 @@ function FlameIcon() {
     <img
       src="/fuocherello.gif"
       alt="Fuocherello"
-      className="w-8 h-8 shrink-0"
+      className="w-[31px] h-[31px] shrink-0"
     />
   )
 }
@@ -73,44 +73,50 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
   }, [mobileOpen])
 
   const glassStyle = {
-    background: "rgba(255, 255, 255, 0.45)",
+    background: "rgba(255, 255, 255, 0.7)",
     backdropFilter: "blur(24px) saturate(180%)",
     WebkitBackdropFilter: "blur(24px) saturate(180%)",
     border: "1px solid rgba(255, 255, 255, 0.5)",
-    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+    boxShadow: "0 4px 30px rgba(0, 0, 0, 0.08)",
   }
 
   return (
     <>
       {/* Desktop nav */}
       <nav
-        className="fixed top-4 left-4 z-[9999] hidden md:flex items-center gap-1 px-4 py-2.5 rounded-full"
+        className="fixed top-4 left-4 z-[9999] hidden md:flex items-center gap-3 px-5 py-3 pr-10 rounded-lg"
         style={glassStyle}
       >
         <Link
           href={homeHref}
-          className="flex items-center gap-2 text-[#0000ff] mr-3 hover:opacity-70 transition-opacity"
+          className="flex items-center gap-2 mr-4 hover:opacity-70 transition-opacity"
+          style={{ color: "#0000ff" }}
         >
           <FlameIcon />
-          <span className="font-semibold text-[15px] tracking-[-0.01em]">
+          <span className="text-[15px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
             <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>F</span>
             <span className="lowercase">uocherello</span>
           </span>
         </Link>
 
-        {navItems.map((item) => {
+        {navItems.map((item, index) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+          const isLast = index === navItems.length - 1
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[13px] px-3 py-1 rounded-full transition-all duration-200 ${
+              className={`text-[13px] rounded-lg transition-all duration-200 ${
                 isActive
-                  ? "text-[#0000ff] bg-[rgba(0,0,255,0.08)] font-medium"
-                  : "text-[#0000ff] hover:bg-[rgba(0,0,255,0.05)] font-normal"
+                  ? "bg-[rgba(0,0,255,0.08)]"
+                  : "hover:bg-[rgba(0,0,255,0.05)]"
               }`}
+              style={Object.assign({ color: "#0000ff", padding: "4px 0.3em" }, isLast ? { marginRight: "1em" } : {})}
             >
-              {item.label}
+              <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>
+                {item.label[0]}
+              </span>
+              <span className="lowercase">{item.label.slice(1)}</span>
             </Link>
           )
         })}
@@ -119,12 +125,20 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
       {/* Mobile: pill button bottom-left */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed bottom-4 left-4 z-[10000] md:hidden flex items-center gap-2 px-4 py-2.5 rounded-full"
+        className="fixed bottom-4 left-4 right-4 z-[10000] md:hidden flex items-center justify-between px-4 h-12 rounded-xl"
         style={glassStyle}
         aria-label={mobileOpen ? "Close menu" : "Open menu"}
       >
-        <FlameIcon />
-        <HamburgerIcon open={mobileOpen} />
+        <Link href={homeHref} className="flex items-center gap-2" style={{ color: "#0000ff" }}>
+          <FlameIcon />
+          <span className="text-[15px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
+            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>F</span>
+            <span className="lowercase">uocherello</span>
+          </span>
+        </Link>
+        <div style={{ marginRight: "1em" }}>
+          <HamburgerIcon open={mobileOpen} />
+        </div>
       </button>
 
       {/* Mobile overlay */}
@@ -138,16 +152,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
           WebkitBackdropFilter: "blur(40px) saturate(200%)",
         }}
       >
-        <div className="flex flex-col items-start justify-center h-full px-8">
-          <Link
-            href={homeHref}
-            onClick={() => setMobileOpen(false)}
-            className="text-[#0000ff] font-semibold text-[28px] mb-10 hover:opacity-70 transition-opacity"
-          >
-            <span className="italic uppercase inline-block" style={{ marginRight: "0.06em" }}>F</span>
-            <span className="lowercase">uocherello</span>
-          </Link>
-
+        <div className="flex flex-col items-center justify-center h-full px-8">
           {navItems.map((item, i) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
             return (
@@ -155,10 +160,11 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`text-[#0000ff] text-[32px] font-normal leading-[1.4] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                  isActive ? "font-medium" : "opacity-70 hover:opacity-100"
+                className={`text-[#0000ff] text-[32px] leading-[1.4] transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  isActive ? "" : "opacity-70 hover:opacity-100"
                 }`}
                 style={{
+                  fontWeight: "normal",
                   transform: mobileOpen ? "translateY(0)" : `translateY(${20 + i * 8}px)`,
                   opacity: mobileOpen ? (isActive ? 1 : 0.7) : 0,
                   transitionDelay: mobileOpen ? `${80 + i * 50}ms` : "0ms",
@@ -171,6 +177,25 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
               </Link>
             )
           })}
+
+          <a
+            href="https://www.instagram.com/fuocherellogallery/"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setMobileOpen(false)}
+            className="text-[#0000ff] text-[32px] leading-[1.4] opacity-70 hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
+            style={{
+              fontWeight: "normal",
+              transform: mobileOpen ? "translateY(0)" : `translateY(${20 + navItems.length * 8}px)`,
+              opacity: mobileOpen ? 0.7 : 0,
+              transitionDelay: mobileOpen ? `${80 + navItems.length * 50}ms` : "0ms",
+            }}
+          >
+            <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>
+              I
+            </span>
+            <span className="lowercase">nstagram</span>
+          </a>
         </div>
       </div>
     </>

@@ -140,8 +140,12 @@ body {
 }
 
 a {
-  color: inherit;
+  color: #0000ff;
   text-decoration: none;
+}
+
+a:visited {
+  color: #0000ff;
 }
 
 img {
@@ -191,4 +195,24 @@ img {
 }
 .mb-2-5 {
   margin-bottom: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  /* Slightly tighter kerning for initial uppercase spans on mobile */
+  .uppercase.inline-block {
+    letter-spacing: -0.02em;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease-out;
 }

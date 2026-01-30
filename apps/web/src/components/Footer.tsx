@@ -11,76 +11,21 @@ export function Footer({ language, footerText, variant = "default" }: FooterProp
  const defaultFooterText = "© 2025"
  const tagline = isItalian ? "Galleria d'arte contemporanea." : "Contemporary art gallery."
 
- if (variant === "home") {
-  return (
-   <footer className="hidden md:block fixed left-0 right-0 bottom-0 bg-white z-50 py-4 text-[#0000ff]">
-    <div
-     className="flex items-center justify-between"
-     style={{
-      gap: "10px",
-      width: "100vw",
-      marginLeft: "calc(50% - 50vw)",
-      paddingLeft: "10px",
-      paddingRight: "10px",
-     }}
-    >
-     <div className="flex items-center flex-nowrap">
-      <div className="text-sm lowercase">{footerText || defaultFooterText}</div>
-      <div className="text-sm text-[#0000ff] flex items-baseline" style={{ marginLeft: "6px" }}>
-       <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>F</span>
-       <span className="lowercase">uocherello</span>
-      </div>
-      <span className="text-sm " style={{ margin: "0 8px" }}>–</span>
-      <div className="text-sm ">{tagline}</div>
-      <a
-       href="https://www.instagram.com/fuocherellogallery/"
-       target="_blank"
-       rel="noopener noreferrer"
-       className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity"
-       style={{ marginLeft: "10px" }}
-      >
-       instagram
-      </a>
-     </div>
-     <div className="flex items-center gap-3">
-      {isItalian ? (
-       <>
-        <span className="text-sm lowercase text-[#0000ff]" style={{ opacity: 0.5, pointerEvents: 'none' }}>it</span>
-        <Link
-         href="/en"
-         className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity"
-        >
-         en
-        </Link>
-       </>
-      ) : (
-       <>
-        <Link
-         href="/"
-         className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity"
-        >
-         it
-        </Link>
-        <span className="text-sm lowercase text-[#0000ff]" style={{ opacity: 0.5, pointerEvents: 'none' }}>en</span>
-       </>
-      )}
-     </div>
-    </div>
-   </footer>
-  )
+ const glassStyle = {
+  background: "rgba(255, 255, 255, 0.7)",
+  backdropFilter: "blur(24px) saturate(180%)",
+  WebkitBackdropFilter: "blur(24px) saturate(180%)",
+  border: "1px solid rgba(255, 255, 255, 0.5)",
+  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.08)",
  }
 
  return (
-  <footer
-   className="hidden md:block py-8 mt-16 text-[#0000ff]"
-   style={{
-    width: "100vw",
-    marginLeft: "calc(50% - 50vw)",
-    paddingLeft: "10px",
-    paddingRight: "10px",
-   }}
-  >
-   <div className="flex items-center flex-wrap justify-between" style={{ gap: "10px" }}>
+  <>
+   {/* Pastiglia principale con info */}
+   <div
+    className="hidden md:block fixed left-4 bottom-4 z-50 py-2.5 px-4 text-[#0000ff] rounded-lg"
+    style={glassStyle}
+   >
     <div className="flex items-center flex-nowrap">
      <div className="text-sm lowercase">{footerText || defaultFooterText}</div>
      <div className="text-sm text-[#0000ff] flex items-baseline" style={{ marginLeft: "6px" }}>
@@ -94,18 +39,25 @@ export function Footer({ language, footerText, variant = "default" }: FooterProp
       target="_blank"
       rel="noopener noreferrer"
       className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity"
-      style={{ marginLeft: "10px" }}
+      style={{ marginLeft: "10px", marginRight: "1em" }}
      >
       instagram
      </a>
     </div>
+   </div>
+
+   {/* Pastiglia separata per switch lingua */}
+   <div
+    className="hidden md:block fixed right-4 bottom-4 z-50 py-2.5 px-4 text-[#0000ff] rounded-lg"
+    style={glassStyle}
+   >
     <div className="flex items-center gap-3">
      {isItalian ? (
       <>
-       <span className="text-sm lowercase text-[#0000ff]" style={{ opacity: 0.5, pointerEvents: 'none' }}>it</span>
+       <span className="text-sm lowercase text-[#0000ff] px-3 py-1" style={{ opacity: 0.5, pointerEvents: 'none' }}>it</span>
        <Link
         href="/en"
-        className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity"
+        className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity px-3 py-1"
        >
         en
        </Link>
@@ -114,15 +66,15 @@ export function Footer({ language, footerText, variant = "default" }: FooterProp
       <>
        <Link
         href="/"
-        className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity"
+        className="text-sm lowercase text-[#0000ff] hover:opacity-70 transition-opacity px-3 py-1"
        >
         it
        </Link>
-       <span className="text-sm lowercase text-[#0000ff]" style={{ opacity: 0.5, pointerEvents: 'none' }}>en</span>
+       <span className="text-sm lowercase text-[#0000ff] px-3 py-1" style={{ opacity: 0.5, pointerEvents: 'none' }}>en</span>
       </>
      )}
     </div>
    </div>
-  </footer>
+  </>
  )
 }

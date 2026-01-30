@@ -1,22 +1,6 @@
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
+import { safeSanityFetch } from "@/lib/sanity.client"
 import { FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
-// Also query old exhibit documents with type="fair" for backward compatibility
-const FAIRS_COMBINED_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(dateStart desc){
-  _id,
-  title,
-  slug,
-  venue,
-  artistsLine,
-  authorName,
-  dateStart,
-  dateEnd,
-  status,
-  featuredImage,
-  language,
-  translationOf
-}`
-import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { urlFor } from "@/lib/imageUrl"
 import Image from "next/image"
@@ -36,27 +20,8 @@ interface Fair {
   featuredImage?: any
 }
 
-const mockFairs: Fair[] = [
-  {
-    _id: "mock-fair-1",
-    title: "Fiera Internazionale d'Arte",
-    slug: { current: "fiera-arte-2024" },
-    venue: "Fiera Milano",
-    dateStart: "2024-05-10",
-    dateEnd: "2024-05-12",
-  },
-  {
-    _id: "mock-fair-2",
-    title: "Art Basel",
-    slug: { current: "art-basel-2024" },
-    venue: "Basel",
-    dateStart: "2024-06-15",
-    dateEnd: "2024-06-18",
-  },
-]
-
 async function getFairs(): Promise<Fair[]> {
-  const result = await safeSanityFetch<Fair[]>(FAIRS_COMBINED_QUERY, { language: "it" }, { next: { revalidate: 60 } })
+  const result = await safeSanityFetch<Fair[]>(FAIRS_QUERY, { language: "it" }, { next: { revalidate: 60 } })
   return result || []
 }
 
@@ -67,21 +32,13 @@ async function getSettings() {
 export default async function FierePage() {
   const [fairs, settings] = await Promise.all([getFairs(), getSettings()])
 
-  const displayFairs = fairs.length > 0 ? fairs : mockFairs
-
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Header language="it" />
+
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
-          {!isSanityAvailable && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-md text-sm text-amber-800">
-              Modalità fallback: configura le variabili d'ambiente di Sanity per visualizzare contenuti reali.
-            </div>
-          )}
-
-          <div className="pointer-events-none" style={{ paddingTop: "1.25rem", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+          <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
+            <h1 className="text-center text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 F
               </span>
@@ -90,13 +47,13 @@ export default async function FierePage() {
           </div>
 
           <div
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 md:grid-cols-2"
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
-            {displayFairs.map((fair) => {
+            {fairs.map((fair) => {
               const content = (
                 <div className="w-full">
-                  <div className="relative w-full aspect-square bg-muted overflow-hidden">
+                  <div className="relative w-full aspect-[4/3] bg-muted overflow-hidden">
                     <Image
                       src={
                         fair.featuredImage
@@ -109,18 +66,59 @@ export default async function FierePage() {
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                     />
                   </div>
-                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
+                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="uppercase leading-[0.95] first-letter:italic">
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {fair.title?.[0] ?? ""}
                         </span>
                         <span className="lowercase">{fair.title?.slice(1) ?? ""}</span>
                       </h2>
-                      {fair.authorName && <span className="lowercase">{fair.authorName}</span>}
+                      {fair.authorName && (
+                        <span>
+                          {fair.authorName!.split(' ').map((word, i) => (
+                            <span key={i}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                {word[0]}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < fair.authorName!.split(' ').length - 1 && ' '}
+                            </span>
+                          ))}
+                        </span>
+                      )}
                     </div>
-                    {fair.venue && <div className="lowercase opacity-70">{fair.venue}</div>}
-                    {fair.artistsLine && <div className="lowercase opacity-70">{fair.artistsLine}</div>}
+                    {fair.venue && (
+                      <div className="opacity-70">
+                        {fair.venue.split(' ').map((word, i) => (
+                          <span key={i}>
+                            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                              {word[0]}
+                            </span>
+                            <span className="lowercase">{word.slice(1)}</span>
+                            {i < fair.venue!.split(' ').length - 1 && ' '}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    {fair.artistsLine && (
+                      <div className="opacity-70">
+                        {fair.artistsLine.split(/,| e | and /).map((name, i, arr) => (
+                          <span key={i}>
+                            {name.trim().split(' ').map((word, j) => (
+                              <span key={j}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                  {word[0]}
+                                </span>
+                                <span className="lowercase">{word.slice(1)}</span>
+                                {j < name.trim().split(' ').length - 1 && ' '}
+                              </span>
+                            ))}
+                            {i < arr.length - 1 && ', '}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                     {(fair.dateStart || fair.dateEnd) && (
                       <div className="lowercase opacity-70">
                         {fair.dateStart && new Date(fair.dateStart).toLocaleDateString("it-IT")}
@@ -131,14 +129,6 @@ export default async function FierePage() {
                   </div>
                 </div>
               )
-
-              if (!isSanityAvailable) {
-                return (
-                  <div key={fair._id} className="block">
-                    {content}
-                  </div>
-                )
-              }
 
               return (
                 <Link

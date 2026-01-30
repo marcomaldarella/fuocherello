@@ -24,7 +24,6 @@ async function getCanvasImages(): Promise<CanvasImage[]> {
   const images = await safeSanityFetch<CanvasImage[]>(HOME_CANVAS_IMAGES_QUERY, {}, { next: { revalidate: 60 } })
   const filtered = (images || []).filter((img) => img.url && img.width && img.height)
   
-  // Temporary test images if no real images
   if (!filtered.length) {
     return [
       { url: "https://picsum.photos/800/600?random=1", width: 800, height: 600 },
@@ -43,8 +42,8 @@ export default async function HomePage() {
     <div className="min-h-screen flex flex-col bg-background">
       <InfiniteCanvasHome media={canvasImages} />
       <main className="flex-1 flex items-center justify-center px-6 py-16 relative z-50 pointer-events-none">
-        <h1 className="text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)] relative z-50">
-          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+        <h1 className="text-[#0000ff] leading-[0.85] tracking-[-0.05em] text-[clamp(4rem,12vw,10rem)] relative z-50 font-bold">
+          <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>
             F
           </span>
           <span className="lowercase">uocherello</span>
