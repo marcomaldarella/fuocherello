@@ -42,7 +42,7 @@ export default async function ArtistsPage() {
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
         <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 A
               </span>
@@ -54,7 +54,8 @@ export default async function ArtistsPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
-            {artists.map((artist) => {
+            {artists.map((artist, index) => {
+              const isLast = index === artists.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-square bg-muted overflow-hidden">
@@ -72,11 +73,16 @@ export default async function ArtistsPage() {
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="uppercase leading-[0.95] first-letter:italic text-[16px] md:text-[17px] whitespace-nowrap">
-                        <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                          {artist.title?.[0] ?? ""}
-                        </span>
-                        <span className="lowercase">{artist.title?.slice(1) ?? ""}</span>
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] whitespace-nowrap">
+                        {artist.title?.split(' ').map((word, i) => (
+                          <span key={i}>
+                            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
+                              {word[0]}
+                            </span>
+                            <span className="lowercase">{word.slice(1)}</span>
+                            {i < artist.title!.split(' ').length - 1 && ' '}
+                          </span>
+                        ))}
                       </h2>
                     </div>
                     {artist.birthYear && <div className="lowercase opacity-70">{artist.birthYear}</div>}
@@ -90,6 +96,7 @@ export default async function ArtistsPage() {
                   key={artist._id}
                   href={`/artisti/${encodeURIComponent(artist.slug.current)}`}
                   className="block hover:opacity-90 transition-opacity"
+                  style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                 >
                   {content}
                 </Link>

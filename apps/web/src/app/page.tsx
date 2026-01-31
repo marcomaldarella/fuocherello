@@ -42,7 +42,7 @@ export default async function HomePage() {
     <div className="min-h-screen flex flex-col bg-background">
       <InfiniteCanvasHome media={canvasImages} />
       <main className="flex-1 flex items-center justify-center px-6 py-16 relative z-50 pointer-events-none">
-        <h1 className="text-[#0000ff] leading-[0.85] tracking-[-0.05em] text-[clamp(4rem,12vw,10rem)] relative z-50 font-bold">
+        <h1 className="text-[#0000ff] leading-[0.85] tracking-[-0.05em] text-[clamp(4rem,12vw,10rem)] relative z-50">
           <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>
             F
           </span>

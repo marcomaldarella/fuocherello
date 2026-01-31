@@ -66,7 +66,8 @@ export default async function EnArtistsPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
-            {artists.map((artist) => {
+            {artists.map((artist, index) => {
+              const isLast = index === artists.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-square bg-muted overflow-hidden">
@@ -84,11 +85,16 @@ export default async function EnArtistsPage() {
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="uppercase leading-[0.95] first-letter:italic text-[16px] md:text-[17px] whitespace-nowrap">
-                        <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                          {artist.title?.[0] ?? ""}
-                        </span>
-                        <span className="lowercase">{artist.title?.slice(1) ?? ""}</span>
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] whitespace-nowrap">
+                        {artist.title?.split(' ').map((word, i) => (
+                          <span key={i}>
+                            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
+                              {word[0]}
+                            </span>
+                            <span className="lowercase">{word.slice(1)}</span>
+                            {i < artist.title!.split(' ').length - 1 && ' '}
+                          </span>
+                        ))}
                       </h2>
                     </div>
                     {artist.birthYear && <div className="lowercase opacity-70">{artist.birthYear}</div>}
@@ -102,6 +108,7 @@ export default async function EnArtistsPage() {
                   key={artist._id}
                   href={`/en/artists/${encodeURIComponent(artist.slug.current)}`}
                   className="block hover:opacity-90 transition-opacity"
+                  style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                 >
                   {content}
                 </Link>

@@ -77,7 +77,7 @@ export default async function ExhibitsPage() {
                     />
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
-                    <div className="flex items-baseline justify-between gap-3">
+                    <div className="flex items-baseline justify-between gap-4">
                       <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {exhibit.title?.[0] ?? ""}
@@ -85,10 +85,10 @@ export default async function ExhibitsPage() {
                         <span className="lowercase">{exhibit.title?.slice(1) ?? ""}</span>
                       </h2>
                       {exhibit.authorName && (
-                        <span>
+                        <span className="whitespace-nowrap shrink-0">
                           <span className="opacity-70 mr-1">testo di</span>
                           {exhibit.authorName!.split(' ').map((word, i) => (
-                            <span key={i}>
+                            <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
@@ -104,7 +104,7 @@ export default async function ExhibitsPage() {
                         {exhibit.artistsLine.split(/,| e | and /).map((name, i, arr) => (
                           <span key={i}>
                             {name.trim().split(' ').map((word, j) => (
-                              <span key={j}>
+                              <span key={j} className="whitespace-nowrap">
                                 <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
@@ -133,7 +133,7 @@ export default async function ExhibitsPage() {
                   key={exhibit._id}
                   href={`/esibizioni-e-fiere/${exhibit.slug.current}`}
                   className="block hover:opacity-90 transition-opacity"
-                  style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
+                  style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                 >
                   {content}
                 </Link>

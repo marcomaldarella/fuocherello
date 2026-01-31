@@ -48,7 +48,7 @@ export default async function EnFairsPage() {
           {isFallback && <FallbackNotice language="en" />}
 
           <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 F
               </span>
@@ -78,7 +78,7 @@ export default async function EnFairsPage() {
                     />
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
-                    <div className="flex items-baseline justify-between gap-3">
+                    <div className="flex items-baseline justify-between gap-4">
                       <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {fair.title?.[0] ?? ""}
@@ -86,10 +86,10 @@ export default async function EnFairsPage() {
                         <span className="lowercase">{fair.title?.slice(1) ?? ""}</span>
                       </h2>
                       {fair.authorName && (
-                        <span>
+                        <span className="whitespace-nowrap shrink-0">
                           <span className="opacity-70 mr-1">text by</span>
                           {fair.authorName!.split(' ').map((word, i) => (
-                            <span key={i}>
+                            <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
@@ -103,7 +103,7 @@ export default async function EnFairsPage() {
                     {fair.venue && (
                       <div className="opacity-70">
                         {fair.venue.split(' ').map((word, i) => (
-                          <span key={i}>
+                          <span key={i} className="whitespace-nowrap">
                             <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                               {word[0]}
                             </span>
@@ -118,7 +118,7 @@ export default async function EnFairsPage() {
                         {fair.artistsLine.split(/,| e | and /).map((name, i, arr) => (
                           <span key={i}>
                             {name.trim().split(' ').map((word, j) => (
-                              <span key={j}>
+                              <span key={j} className="whitespace-nowrap">
                                 <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
@@ -147,7 +147,7 @@ export default async function EnFairsPage() {
                   key={fair._id}
                   href={`/en/fairs/${fair.slug.current}`}
                   className="block hover:opacity-90 transition-opacity"
-                  style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
+                  style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                 >
                   {content}
                 </Link>

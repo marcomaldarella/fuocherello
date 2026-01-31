@@ -36,7 +36,7 @@ export default async function NewsPage() {
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
           <div className="pointer-events-none" style={{ paddingTop: "1em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 N
               </span>
@@ -92,7 +92,7 @@ export default async function NewsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block hover:opacity-90 transition-opacity"
-                    style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
+                    style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                   >
                     {content}
                   </a>
@@ -100,7 +100,7 @@ export default async function NewsPage() {
               }
 
               return (
-                <div key={item._id} className="block" style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}>
+                <div key={item._id} className="block" style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}>
                   {content}
                 </div>
               )

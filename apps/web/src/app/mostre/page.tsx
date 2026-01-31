@@ -44,7 +44,7 @@ export default async function MostrePage() {
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
           <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 M
               </span>
@@ -74,7 +74,7 @@ export default async function MostrePage() {
                     />
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
-                    <div className="flex items-baseline justify-between gap-3">
+                    <div className="flex items-baseline justify-between gap-4">
                       <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {exhibition.title?.[0] ?? ""}
@@ -82,10 +82,10 @@ export default async function MostrePage() {
                         <span className="lowercase">{exhibition.title?.slice(1) ?? ""}</span>
                       </h2>
                       {exhibition.authorName && (
-                        <span>
+                        <span className="whitespace-nowrap shrink-0">
                           <span className="opacity-70 mr-1">testo di</span>
                           {exhibition.authorName!.split(' ').map((word, i) => (
-                            <span key={i}>
+                            <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
@@ -101,7 +101,7 @@ export default async function MostrePage() {
                         {exhibition.artistsLine.split(/,| e | and /).map((name, i, arr) => (
                           <span key={i}>
                             {name.trim().split(' ').map((word, j) => (
-                              <span key={j}>
+                              <span key={j} className="whitespace-nowrap">
                                 <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
@@ -130,7 +130,7 @@ export default async function MostrePage() {
                   key={exhibition._id}
                   href={`/mostre/${exhibition.slug.current}`}
                   className="block hover:opacity-90 transition-opacity"
-                  style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
+                  style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                 >
                   {content}
                 </Link>

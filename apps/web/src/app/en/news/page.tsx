@@ -99,7 +99,7 @@ export default async function EnNewsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block hover:opacity-90 transition-opacity"
-                    style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
+                    style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}
                   >
                     {content}
                   </a>
@@ -107,7 +107,7 @@ export default async function EnNewsPage() {
               }
 
               return (
-                <div key={item._id} className="block" style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}>
+                <div key={item._id} className="block" style={isLast ? { paddingBottom: 'clamp(2em, 4vw, 3em)' } : undefined}>
                   {content}
                 </div>
               )
