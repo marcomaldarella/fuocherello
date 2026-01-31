@@ -282,7 +282,7 @@ export function ExhibitHorizontalGallery({
                 )}
               </div>
             ) : item.type === "text" ? (
-              <div className="w-full max-w-[800px] mx-auto py-6 text-[#0000ff]" style={{ paddingTop: '2em', paddingBottom: '2em' }}>
+              <div className="w-full max-w-[800px] mx-auto text-[#0000ff]" style={{ paddingTop: '1.5em', paddingBottom: '0.5em' }}>
                 {!isMobile && (
                   <>
                     <h1 className="uppercase leading-[0.95] text-[24px] mb-6">
@@ -302,7 +302,7 @@ export function ExhibitHorizontalGallery({
                   </div>
                 )}
                 {authorName && (
-                  <div className="mt-6 text-[13px] opacity-70">
+                  <div className="mt-3 text-[13px] opacity-70">
                     <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
                     {authorName.split(' ').map((word, i) => (
                       <span key={i}>
@@ -321,7 +321,7 @@ export function ExhibitHorizontalGallery({
         ))}
 
         {relatedExhibitions.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em", marginTop: "1.5em" }}>
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "1em" }}>
             <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-4">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
@@ -409,7 +409,7 @@ export function ExhibitHorizontalGallery({
         )}
 
         {relatedFairs.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em", marginTop: "1.5em" }}>
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "1em" }}>
             <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-4">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
