@@ -64,7 +64,7 @@ export default async function MostrePage() {
                     <Image
                       src={
                         exhibition.featuredImage
-                          ? urlFor(exhibition.featuredImage).width(1200).height(1200).fit("crop").url()
+                          ? urlFor(exhibition.featuredImage).width(800).height(800).fit("crop").url()
                           : `/placeholder.svg?height=800&width=800`
                       }
                       alt={exhibition.title}
@@ -83,7 +83,7 @@ export default async function MostrePage() {
                       </h2>
                       {exhibition.authorName && (
                         <span className="whitespace-nowrap shrink-0">
-                          <span className="opacity-70 mr-1">testo di</span>
+                          <span className="opacity-70 mr-[0.5em]">testo di</span>
                           {exhibition.authorName!.split(' ').map((word, i) => (
                             <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>

@@ -68,7 +68,7 @@ export default async function EnFairsPage() {
                     <Image
                       src={
                         fair.featuredImage
-                          ? urlFor(fair.featuredImage).width(1200).height(1200).fit("crop").url()
+                          ? urlFor(fair.featuredImage).width(800).height(800).fit("crop").url()
                           : `/placeholder.svg?height=800&width=800`
                       }
                       alt={fair.title}
@@ -87,7 +87,7 @@ export default async function EnFairsPage() {
                       </h2>
                       {fair.authorName && (
                         <span className="whitespace-nowrap shrink-0">
-                          <span className="opacity-70 mr-1">text by</span>
+                          <span className="opacity-70 mr-[0.5em]">text by</span>
                           {fair.authorName!.split(' ').map((word, i) => (
                             <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>

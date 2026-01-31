@@ -62,7 +62,7 @@ export default async function ArtistsPage() {
                     <Image
                       src={
                         artist.featuredImage
-                          ? urlFor(artist.featuredImage).width(1200).height(1200).fit("crop").url()
+                          ? urlFor(artist.featuredImage).width(800).height(800).fit("crop").url()
                           : `/placeholder.svg?height=800&width=800`
                       }
                       alt={artist.title}

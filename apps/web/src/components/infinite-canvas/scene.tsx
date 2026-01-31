@@ -19,7 +19,7 @@ import {
   VELOCITY_LERP,
 } from "./constants";
 import styles from "./style.module.css";
-import { getTexture } from "./texture-manager";
+import { getTexture, clearTextureCache } from "./texture-manager";
 import type { ChunkData, InfiniteCanvasProps, MediaItem, PlaneData } from "./types";
 import { generateChunkPlanesCached, getChunkUpdateThrottleMs, shouldThrottleUpdate } from "./utils";
 
@@ -355,37 +355,43 @@ function SceneController({ media, onTextureProgress }: { media: MediaItem[]; onT
     };
 
     const onTouchStart = (e: TouchEvent) => {
-      e.preventDefault();
-      s.lastTouches = Array.from(e.touches) as Touch[];
-      s.lastTouchDist = getTouchDistance(s.lastTouches);
-      setCursor("grabbing");
+      try {
+        e.preventDefault();
+        s.lastTouches = Array.from(e.touches) as Touch[];
+        s.lastTouchDist = getTouchDistance(s.lastTouches);
+        setCursor("grabbing");
+      } catch (_) { /* ignore */ }
     };
 
     const onTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-      const touches = Array.from(e.touches) as Touch[];
+      try {
+        e.preventDefault();
+        const touches = Array.from(e.touches) as Touch[];
 
-      if (touches.length === 1 && s.lastTouches.length >= 1) {
-        const [touch] = touches;
-        const [last] = s.lastTouches;
+        if (touches.length === 1 && s.lastTouches.length >= 1) {
+          const touch = touches[0];
+          const last = s.lastTouches[0];
 
-        if (touch && last) {
-          s.targetVel.x -= (touch.clientX - last.clientX) * 0.02;
-          s.targetVel.y += (touch.clientY - last.clientY) * 0.02;
+          if (touch && last) {
+            s.targetVel.x -= (touch.clientX - last.clientX) * 0.02;
+            s.targetVel.y += (touch.clientY - last.clientY) * 0.02;
+          }
+        } else if (touches.length === 2 && s.lastTouchDist > 0) {
+          const dist = getTouchDistance(touches);
+          s.scrollAccum += (s.lastTouchDist - dist) * 0.006;
+          s.lastTouchDist = dist;
         }
-      } else if (touches.length === 2 && s.lastTouchDist > 0) {
-        const dist = getTouchDistance(touches);
-        s.scrollAccum += (s.lastTouchDist - dist) * 0.006;
-        s.lastTouchDist = dist;
-      }
 
-      s.lastTouches = touches;
+        s.lastTouches = touches;
+      } catch (_) { /* ignore */ }
     };
 
     const onTouchEnd = (e: TouchEvent) => {
-      s.lastTouches = Array.from(e.touches) as Touch[];
-      s.lastTouchDist = getTouchDistance(s.lastTouches);
-      setCursor("grab");
+      try {
+        s.lastTouches = Array.from(e.touches) as Touch[];
+        s.lastTouchDist = getTouchDistance(s.lastTouches);
+        setCursor("grab");
+      } catch (_) { /* ignore */ }
     };
 
     canvas.addEventListener("mousedown", onMouseDown);
@@ -397,6 +403,16 @@ function SceneController({ media, onTextureProgress }: { media: MediaItem[]; onT
     canvas.addEventListener("touchmove", onTouchMove, { passive: false });
     canvas.addEventListener("touchend", onTouchEnd, { passive: false });
 
+    const onContextLost = (e: Event) => {
+      e.preventDefault();
+      clearTextureCache();
+    };
+    const onContextRestored = () => {
+      clearTextureCache();
+    };
+    canvas.addEventListener("webglcontextlost", onContextLost);
+    canvas.addEventListener("webglcontextrestored", onContextRestored);
+
     return () => {
       canvas.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("mouseup", onMouseUp);
@@ -406,6 +422,8 @@ function SceneController({ media, onTextureProgress }: { media: MediaItem[]; onT
       canvas.removeEventListener("touchstart", onTouchStart);
       canvas.removeEventListener("touchmove", onTouchMove);
       canvas.removeEventListener("touchend", onTouchEnd);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
+      canvas.removeEventListener("webglcontextrestored", onContextRestored);
     };
   }, [gl]);
 
@@ -529,7 +547,7 @@ export function InfiniteCanvasScene({
   fogColor = "#ffffff",
 }: InfiniteCanvasProps) {
   const isTouchDevice = useIsTouchDevice();
-  const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.25 : 1.5);
+  const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1 : 1.5);
 
   if (!media.length) {
     return null;

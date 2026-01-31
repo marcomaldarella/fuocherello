@@ -106,7 +106,7 @@ export function ArtistGalleryLayout({ name, bio, authorName, gallery, pdfUrl, la
             {squareImages.map((img, idx) => (
               <div key={idx} className="relative w-full aspect-square bg-muted overflow-hidden">
                 <Image
-                  src={urlFor(img.asset).width(1200).height(1200).fit("crop").url()}
+                  src={urlFor(img.asset).width(800).height(800).fit("crop").url()}
                   alt={img.alt || `${name} artwork ${idx + 1}`}
                   fill
                   className="object-cover"

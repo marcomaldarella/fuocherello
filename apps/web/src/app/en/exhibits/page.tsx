@@ -71,7 +71,7 @@ export default async function EnExhibitsPage() {
                     <Image
                       src={
                         exhibit.featuredImage
-                          ? urlFor(exhibit.featuredImage).width(1200).height(1200).fit("crop").url() || "/placeholder.svg"
+                          ? urlFor(exhibit.featuredImage).width(800).height(800).fit("crop").url() || "/placeholder.svg"
                           : `/placeholder.svg?height=800&width=800&query=art exhibition ${exhibit.type} ${index + 1}`
                       }
                       alt={exhibit.title}
@@ -90,7 +90,7 @@ export default async function EnExhibitsPage() {
                       </h2>
                       {exhibit.authorName && (
                         <span className="whitespace-nowrap shrink-0">
-                          <span className="opacity-70 mr-1">text by</span>
+                          <span className="opacity-70 mr-[0.5em]">text by</span>
                           {exhibit.authorName.split(' ').map((word, i) => (
                             <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
