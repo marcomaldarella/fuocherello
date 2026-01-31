@@ -60,7 +60,8 @@ export default async function EnFairsPage() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
-            {fairs.map((fair) => {
+            {fairs.map((fair, index) => {
+              const isLast = index === fairs.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-square bg-muted overflow-hidden">
@@ -86,9 +87,10 @@ export default async function EnFairsPage() {
                       </h2>
                       {fair.authorName && (
                         <span>
+                          <span className="opacity-70 mr-1">text by</span>
                           {fair.authorName!.split(' ').map((word, i) => (
                             <span key={i}>
-                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
                               <span className="lowercase">{word.slice(1)}</span>
@@ -102,7 +104,7 @@ export default async function EnFairsPage() {
                       <div className="opacity-70">
                         {fair.venue.split(' ').map((word, i) => (
                           <span key={i}>
-                            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                               {word[0]}
                             </span>
                             <span className="lowercase">{word.slice(1)}</span>
@@ -117,7 +119,7 @@ export default async function EnFairsPage() {
                           <span key={i}>
                             {name.trim().split(' ').map((word, j) => (
                               <span key={j}>
-                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
                                 <span className="lowercase">{word.slice(1)}</span>
@@ -145,6 +147,7 @@ export default async function EnFairsPage() {
                   key={fair._id}
                   href={`/en/fairs/${fair.slug.current}`}
                   className="block hover:opacity-90 transition-opacity"
+                  style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
                 >
                   {content}
                 </Link>

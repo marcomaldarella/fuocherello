@@ -130,7 +130,7 @@ export function ExhibitInfoDrawer({ body, language, title, authorName }: Exhibit
                     <div className="opacity-70 flex items-center">
                       {authorName.split(' ').map((word, i) => (
                         <span key={i}>
-                          <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                          <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                             {word[0]}
                           </span>
                           <span className="lowercase">{word.slice(1)}</span>

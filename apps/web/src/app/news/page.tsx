@@ -49,6 +49,7 @@ export default async function NewsPage() {
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
             {news.map((item, index) => {
+              const isLast = index === news.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-[4/3] bg-muted overflow-hidden">
@@ -64,9 +65,9 @@ export default async function NewsPage() {
                       <PlaceholderSVG height={900} width={1200} query={`contemporary art exhibition news ${index + 1}`} />
                     )}
                   </div>
-                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
+                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="uppercase leading-[0.95] first-letter:italic text-[16px] md:text-[17px] whitespace-nowrap">
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {item.title?.[0] ?? ""}
                         </span>
@@ -91,6 +92,7 @@ export default async function NewsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block hover:opacity-90 transition-opacity"
+                    style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
                   >
                     {content}
                   </a>
@@ -98,7 +100,7 @@ export default async function NewsPage() {
               }
 
               return (
-                <div key={item._id} className="block">
+                <div key={item._id} className="block" style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}>
                   {content}
                 </div>
               )

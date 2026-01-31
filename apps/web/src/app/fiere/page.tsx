@@ -50,7 +50,8 @@ export default async function FierePage() {
             className="grid grid-cols-1 md:grid-cols-2"
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
-            {fairs.map((fair) => {
+            {fairs.map((fair, index) => {
+              const isLast = index === fairs.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-[4/3] bg-muted overflow-hidden">
@@ -76,9 +77,10 @@ export default async function FierePage() {
                       </h2>
                       {fair.authorName && (
                         <span>
+                          <span className="opacity-70 mr-1">testo di</span>
                           {fair.authorName!.split(' ').map((word, i) => (
                             <span key={i}>
-                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
                               <span className="lowercase">{word.slice(1)}</span>
@@ -92,7 +94,7 @@ export default async function FierePage() {
                       <div className="opacity-70">
                         {fair.venue.split(' ').map((word, i) => (
                           <span key={i}>
-                            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                               {word[0]}
                             </span>
                             <span className="lowercase">{word.slice(1)}</span>
@@ -107,7 +109,7 @@ export default async function FierePage() {
                           <span key={i}>
                             {name.trim().split(' ').map((word, j) => (
                               <span key={j}>
-                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
                                 <span className="lowercase">{word.slice(1)}</span>
@@ -135,6 +137,7 @@ export default async function FierePage() {
                   key={fair._id}
                   href={`/fiere/${fair.slug.current}`}
                   className="block hover:opacity-90 transition-opacity"
+                  style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
                 >
                   {content}
                 </Link>

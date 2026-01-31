@@ -60,6 +60,7 @@ export default async function ExhibitsPage() {
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
             {exhibits.map((exhibit, index) => {
+              const isLast = index === exhibits.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-square bg-muted overflow-hidden">
@@ -85,9 +86,10 @@ export default async function ExhibitsPage() {
                       </h2>
                       {exhibit.authorName && (
                         <span>
+                          <span className="opacity-70 mr-1">testo di</span>
                           {exhibit.authorName!.split(' ').map((word, i) => (
                             <span key={i}>
-                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
                               <span className="lowercase">{word.slice(1)}</span>
@@ -103,7 +105,7 @@ export default async function ExhibitsPage() {
                           <span key={i}>
                             {name.trim().split(' ').map((word, j) => (
                               <span key={j}>
-                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
                                 <span className="lowercase">{word.slice(1)}</span>
@@ -131,6 +133,7 @@ export default async function ExhibitsPage() {
                   key={exhibit._id}
                   href={`/esibizioni-e-fiere/${exhibit.slug.current}`}
                   className="block hover:opacity-90 transition-opacity"
+                  style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
                 >
                   {content}
                 </Link>

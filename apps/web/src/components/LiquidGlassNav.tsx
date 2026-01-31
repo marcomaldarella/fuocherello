@@ -94,7 +94,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
         >
           <FlameIcon />
           <span className="text-[15px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
-            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>F</span>
+            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>F</span>
             <span className="lowercase">uocherello</span>
           </span>
         </Link>
@@ -132,7 +132,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
         <Link href={homeHref} className="flex items-center gap-2" style={{ color: "#0000ff" }}>
           <FlameIcon />
           <span className="text-[15px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
-            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>F</span>
+            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>F</span>
             <span className="lowercase">uocherello</span>
           </span>
         </Link>

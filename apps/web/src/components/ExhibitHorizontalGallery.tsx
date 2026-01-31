@@ -56,10 +56,10 @@ export function ExhibitHorizontalGallery({
     const arr: any[] = []
     if (featuredImage) arr.push({ type: "image", image: featuredImage })
     if (gallery && gallery.length) arr.push(...gallery.map((g) => ({ type: "image", image: g.image })).filter((x) => x.image))
-    // text slide last after all images
-    if (body) arr.push({ type: "text" })
+    // text slide last after all images (show if body or authorName)
+    if (body || authorName) arr.push({ type: "text" })
     return arr
-  }, [featuredImage, gallery, body])
+  }, [featuredImage, gallery, body, authorName])
 
   const renderNameList = (names?: string) => {
     if (!names) return null
@@ -67,7 +67,7 @@ export function ExhibitHorizontalGallery({
       <span key={i}>
         {name.trim().split(" ").map((word, j) => (
           <span key={j}>
-            <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+            <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
               {word[0]}
             </span>
             <span className="lowercase">{word.slice(1)}</span>
@@ -306,7 +306,7 @@ export function ExhibitHorizontalGallery({
                     <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
                     {authorName.split(' ').map((word, i) => (
                       <span key={i}>
-                        <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                        <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                           {word[0]}
                         </span>
                         <span className="lowercase">{word.slice(1)}</span>
@@ -362,9 +362,10 @@ export function ExhibitHorizontalGallery({
                         </h3>
                         {item.authorName && (
                           <span>
+                            <span className="opacity-70 mr-1">{language === 'en' ? 'text by' : 'testo di'}</span>
                             {item.authorName.split(" ").map((word, i) => (
                               <span key={i}>
-                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
                                 <span className="lowercase">{word.slice(1)}</span>
@@ -380,7 +381,7 @@ export function ExhibitHorizontalGallery({
                             <span key={i}>
                               {name.trim().split(" ").map((word, j) => (
                                 <span key={j}>
-                                  <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                  <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                     {word[0]}
                                   </span>
                                   <span className="lowercase">{word.slice(1)}</span>
@@ -449,9 +450,10 @@ export function ExhibitHorizontalGallery({
                         </h3>
                         {item.authorName && (
                           <span>
+                            <span className="opacity-70 mr-1">{language === 'en' ? 'text by' : 'testo di'}</span>
                             {item.authorName.split(" ").map((word, i) => (
                               <span key={i}>
-                                <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                   {word[0]}
                                 </span>
                                 <span className="lowercase">{word.slice(1)}</span>
@@ -465,7 +467,7 @@ export function ExhibitHorizontalGallery({
                         <div className="opacity-70">
                           {item.venue.split(' ').map((word, i) => (
                             <span key={i}>
-                              <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                 {word[0]}
                               </span>
                               <span className="lowercase">{word.slice(1)}</span>
@@ -480,7 +482,7 @@ export function ExhibitHorizontalGallery({
                             <span key={i}>
                               {name.trim().split(' ').map((word, j) => (
                                 <span key={j}>
-                                  <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                                  <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                                     {word[0]}
                                   </span>
                                   <span className="lowercase">{word.slice(1)}</span>
@@ -604,17 +606,19 @@ export function ExhibitHorizontalGallery({
               </div>
 
               {/* Body content */}
-              <div className="flex-1 overflow-y-auto" style={{ marginTop: '10px' }}>
-                <div className="max-w-[80vw] mx-auto ml-[10px] md:ml-[20px] columns-1 md:columns-2" style={{ columnGap: "1.5rem", lineHeight: '1em' }}>
-                  {body && <PortableTextRenderer value={body} />}
+              {body && (
+                <div className="flex-1 overflow-y-auto" style={{ marginTop: '10px' }}>
+                  <div className="max-w-[80vw] mx-auto ml-[10px] md:ml-[20px] columns-1 md:columns-2" style={{ columnGap: "1.5rem", lineHeight: '1em' }}>
+                    <PortableTextRenderer value={body} />
+                  </div>
                 </div>
-              </div>
+              )}
               {authorName && (
                 <div className="mt-6 text-[13px] opacity-70 ml-[10px] md:ml-[20px]">
                   <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
                   {authorName.split(' ').map((word, i) => (
                     <span key={i}>
-                      <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                      <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                         {word[0]}
                       </span>
                       <span className="lowercase">{word.slice(1)}</span>

@@ -59,7 +59,7 @@ export function ArtistGalleryLayout({ name, bio, authorName, gallery, pdfUrl, la
                 <p className="text-[12px] md:text-[13px] opacity-70 flex items-center justify-center">
                   {authorName.split(' ').map((word, i) => (
                     <span key={i}>
-                      <span className="italic uppercase inline-block" style={{ marginRight: "0.04em" }}>
+                      <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
                         {word[0]}
                       </span>
                       <span className="lowercase">{word.slice(1)}</span>

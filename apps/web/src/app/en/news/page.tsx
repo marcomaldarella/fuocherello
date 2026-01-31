@@ -44,7 +44,7 @@ export default async function EnNewsPage() {
         <div className="w-full">
           {isFallback && <FallbackNotice language="en" />}
 
-          <div className="pointer-events-none" style={{ paddingTop: "1.25rem", marginBottom: "2.5rem", minHeight: "5rem" }}>
+          <div className="pointer-events-none" style={{ paddingTop: "1em", marginBottom: "2.5rem", minHeight: "5rem" }}>
             <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 N
@@ -58,6 +58,7 @@ export default async function EnNewsPage() {
             style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
           >
             {news.map((item, index) => {
+              const isLast = index === news.length - 1
               const content = (
                 <div className="w-full">
                   <div className="relative w-full aspect-[4/3] bg-muted overflow-hidden">
@@ -73,9 +74,9 @@ export default async function EnNewsPage() {
                       sizes="(min-width: 768px) 50vw, 100vw"
                     />
                   </div>
-                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
+                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="uppercase leading-[0.95] first-letter:italic text-[16px] md:text-[17px] whitespace-nowrap">
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {item.title?.[0] ?? ""}
                         </span>
@@ -98,6 +99,7 @@ export default async function EnNewsPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block hover:opacity-90 transition-opacity"
+                    style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}
                   >
                     {content}
                   </a>
@@ -105,7 +107,7 @@ export default async function EnNewsPage() {
               }
 
               return (
-                <div key={item._id} className="block">
+                <div key={item._id} className="block" style={isLast ? { paddingBottom: 'clamp(1em, 3vw, 2em)' } : undefined}>
                   {content}
                 </div>
               )
