@@ -142,7 +142,6 @@ export default async function FairDetailPage({ params }: { params: Promise<{ slu
             authorName={displayFair.authorName || ""}
             body={displayFair.body}
             language="it"
-            relatedExhibitions={randomExhibitions}
             relatedFairs={randomFairs}
           />
         </main>

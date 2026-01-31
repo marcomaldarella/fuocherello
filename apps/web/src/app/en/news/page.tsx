@@ -45,7 +45,7 @@ export default async function EnNewsPage() {
           {isFallback && <FallbackNotice language="en" />}
 
           <div className="pointer-events-none" style={{ paddingTop: "1em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 N
               </span>
@@ -83,7 +83,7 @@ export default async function EnNewsPage() {
                         <span className="lowercase">{item.title?.slice(1) ?? ""}</span>
                       </h2>
                       {item.date && (
-                        <span className="lowercase opacity-70">{new Date(item.date).toLocaleDateString("en-US")}</span>
+                        <span className="lowercase opacity-70">{new Date(item.date).toLocaleDateString("en-US").replaceAll("/", ".")}</span>
                       )}
                     </div>
                     {item.summaryLine && <div className="lowercase opacity-70">{item.summaryLine}</div>}

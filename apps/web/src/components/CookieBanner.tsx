@@ -27,10 +27,18 @@ export function CookieBanner() {
       style={{ animation: "fadeInUp 0.4s ease-out" }}
     >
       <div
-        className="pointer-events-auto mx-auto max-w-lg border border-[#0000ff]/20 bg-white/95 backdrop-blur-sm text-[#0000ff] text-[12px] md:text-[13px] leading-tight px-5 py-4"
-        style={{ borderRadius: "2px" }}
+        className="pointer-events-auto mx-auto max-w-lg text-[#0000ff] text-[12px] md:text-[13px] leading-tight"
+        style={{
+          padding: "14px 20px",
+          borderRadius: "12px",
+          background: "rgba(255,255,255,0.85)",
+          backdropFilter: "blur(24px) saturate(180%)",
+          WebkitBackdropFilter: "blur(24px) saturate(180%)",
+          border: "1px solid rgba(255,255,255,0.5)",
+          boxShadow: "0 4px 30px rgba(0,0,0,0.08)",
+        }}
       >
-        <p className="mb-3 opacity-80">
+        <p className="mb-2 opacity-80">
           Questo sito utilizza cookie tecnici e di analisi per migliorare la tua esperienza.
           Continuando la navigazione acconsenti al loro utilizzo.
         </p>
@@ -41,17 +49,35 @@ export function CookieBanner() {
         <div className="flex gap-3">
           <button
             onClick={accept}
-            className="border border-[#0000ff] text-[#0000ff] px-4 py-1.5 text-[12px] uppercase tracking-wide hover:bg-[#0000ff] hover:text-white transition-colors"
+            className="text-[#0000ff] text-[12px] uppercase tracking-wide hover:opacity-70 transition-opacity"
+            style={{
+              padding: "10px 16px",
+              borderRadius: "12px",
+              background: "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              WebkitBackdropFilter: "blur(24px) saturate(180%)",
+              border: "1px solid rgba(255,255,255,0.5)",
+              boxShadow: "0 4px 30px rgba(0,0,0,0.08)",
+            }}
           >
-            <span className="italic inline-block" style={{ marginRight: "0.07em" }}>A</span>
-            <span className="lowercase">ccetta</span>
+            <span className="italic inline-block" style={{ marginRight: "0.02em" }}>A</span>
+            <span style={{ marginLeft: "0.1em" }}>ccetta</span>
           </button>
           <button
             onClick={decline}
-            className="border border-[#0000ff]/30 text-[#0000ff] px-4 py-1.5 text-[12px] uppercase tracking-wide opacity-60 hover:opacity-100 transition-opacity"
+            className="text-[#0000ff] text-[12px] uppercase tracking-wide opacity-60 hover:opacity-100 transition-opacity"
+            style={{
+              padding: "10px 16px",
+              borderRadius: "12px",
+              background: "rgba(255,255,255,0.85)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              WebkitBackdropFilter: "blur(24px) saturate(180%)",
+              border: "1px solid rgba(255,255,255,0.5)",
+              boxShadow: "0 4px 30px rgba(0,0,0,0.08)",
+            }}
           >
-            <span className="italic inline-block" style={{ marginRight: "0.07em" }}>R</span>
-            <span className="lowercase">ifiuta</span>
+            <span className="italic inline-block" style={{ marginRight: "0.02em" }}>R</span>
+            <span style={{ marginLeft: "0.1em" }}>ifiuta</span>
           </button>
         </div>
       </div>

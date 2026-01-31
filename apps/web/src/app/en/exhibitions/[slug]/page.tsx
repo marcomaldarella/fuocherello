@@ -127,7 +127,6 @@ export default async function EnExhibitionDetailPage({ params }: { params: Promi
             body={displayExhibition.body}
             language="en"
             relatedExhibitions={randomExhibitions}
-            relatedFairs={randomFairs}
           />
         </main>
       </div>

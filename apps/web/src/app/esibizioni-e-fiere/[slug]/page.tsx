@@ -89,8 +89,8 @@ export default async function ExhibitDetailPage({ params }: { params: Promise<{ 
             gallery={displayExhibit.gallery}
             body={displayExhibit.body}
             language="it"
-            relatedExhibitions={randomExhibitions}
-            relatedFairs={randomFairs}
+            relatedExhibitions={displayExhibit._type === 'fair' || displayExhibit.type === 'fair' ? [] : randomExhibitions}
+            relatedFairs={displayExhibit._type === 'fair' || displayExhibit.type === 'fair' ? randomFairs : []}
           />
 
           {/* Testo ora incluso come ultima slide nella galleria (mobile: scroll verticale) */}

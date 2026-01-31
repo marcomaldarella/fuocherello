@@ -330,7 +330,7 @@ export function ExhibitHorizontalGallery({
             </h2>
             <div
               className="grid grid-cols-1 md:grid-cols-2"
-              style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
+              style={{ gap: "10px" }}
             >
               {relatedExhibitions.map((item) => (
                 <Link
@@ -395,9 +395,9 @@ export function ExhibitHorizontalGallery({
                       )}
                       {(item.dateStart || item.dateEnd) && (
                         <div className="lowercase opacity-70">
-                          {item.dateStart && new Date(item.dateStart).toLocaleDateString(locale)}
+                          {item.dateStart && new Date(item.dateStart).toLocaleDateString(locale).replaceAll("/", ".")}
                           {item.dateStart && item.dateEnd && " - "}
-                          {item.dateEnd && new Date(item.dateEnd).toLocaleDateString(locale)}
+                          {item.dateEnd && new Date(item.dateEnd).toLocaleDateString(locale).replaceAll("/", ".")}
                         </div>
                       )}
                     </div>
@@ -418,7 +418,7 @@ export function ExhibitHorizontalGallery({
             </h2>
             <div
               className="grid grid-cols-1 md:grid-cols-2"
-              style={{ gap: "10px", marginLeft: "10px", marginRight: "10px" }}
+              style={{ gap: "10px" }}
             >
               {relatedFairs.map((item) => (
                 <Link
@@ -496,9 +496,9 @@ export function ExhibitHorizontalGallery({
                       )}
                       {(item.dateStart || item.dateEnd) && (
                         <div className="lowercase opacity-70">
-                          {item.dateStart && new Date(item.dateStart).toLocaleDateString(locale)}
+                          {item.dateStart && new Date(item.dateStart).toLocaleDateString(locale).replaceAll("/", ".")}
                           {item.dateStart && item.dateEnd && " - "}
-                          {item.dateEnd && new Date(item.dateEnd).toLocaleDateString(locale)}
+                          {item.dateEnd && new Date(item.dateEnd).toLocaleDateString(locale).replaceAll("/", ".")}
                         </div>
                       )}
                     </div>
@@ -592,7 +592,7 @@ export function ExhibitHorizontalGallery({
             <div className="absolute inset-0 bg-white px-[10px] py-8 text-[#0000ff] flex flex-col" style={{ paddingTop: '10vh', marginLeft: '10px' }}>
               {/* Title and Author at top left */}
               <div className="mb-8">
-                <h1 className="uppercase  mb-2" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)', lineHeight: '1em' }}>
+                <h1 className="uppercase font-medium mb-2" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)', lineHeight: '1em' }}>
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
                   </span>

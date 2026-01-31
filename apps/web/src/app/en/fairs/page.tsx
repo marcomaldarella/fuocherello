@@ -48,7 +48,7 @@ export default async function EnFairsPage() {
           {isFallback && <FallbackNotice language="en" />}
 
           <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 F
               </span>
@@ -133,9 +133,9 @@ export default async function EnFairsPage() {
                     )}
                     {(fair.dateStart || fair.dateEnd) && (
                       <div className="lowercase opacity-70">
-                        {fair.dateStart && new Date(fair.dateStart).toLocaleDateString("en-US")}
+                        {fair.dateStart && new Date(fair.dateStart).toLocaleDateString("en-US").replaceAll("/", ".")}
                         {fair.dateStart && fair.dateEnd && " - "}
-                        {fair.dateEnd && new Date(fair.dateEnd).toLocaleDateString("en-US")}
+                        {fair.dateEnd && new Date(fair.dateEnd).toLocaleDateString("en-US").replaceAll("/", ".")}
                       </div>
                     )}
                   </div>

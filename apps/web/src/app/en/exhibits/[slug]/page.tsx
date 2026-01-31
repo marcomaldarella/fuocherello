@@ -100,8 +100,8 @@ export default async function EnExhibitDetailPage({ params }: { params: Promise<
             gallery={displayExhibit.gallery}
             body={displayExhibit.body}
             language="en"
-            relatedExhibitions={randomExhibitions}
-            relatedFairs={randomFairs}
+            relatedExhibitions={displayExhibit._type === 'fair' || displayExhibit.type === 'fair' ? [] : randomExhibitions}
+            relatedFairs={displayExhibit._type === 'fair' || displayExhibit.type === 'fair' ? randomFairs : []}
           />
 
           {/* Testo incluso come ultima slide (drawer rimosso) */}

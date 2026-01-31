@@ -34,7 +34,7 @@ export function ArtistGalleryLayout({ name, bio, authorName, gallery, pdfUrl, la
       {/* Header with name and bio - centered */}
       <div className="w-full px-6 md:px-12 lg:px-[12%] xl:px-[15%] pt-32 md:pt-40 pb-[calc(var(--spacing)*12)] text-center flex flex-col items-center">
         <h1
-          className="text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)] mb-[calc(var(--spacing)*8)] pt-[1em] max-w-5xl mx-auto"
+          className="text-[#0000ff] font-bold leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)] mb-[calc(var(--spacing)*8)] pt-[1em] max-w-5xl mx-auto"
           style={{ paddingTop: "1em" }}
         >
           {name.split(' ').filter(Boolean).map((word, i, arr) => (

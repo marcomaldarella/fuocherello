@@ -123,7 +123,6 @@ export default async function EnFairDetailPage({ params }: { params: Promise<{ s
             authorName={displayFair.authorName || ""}
             body={displayFair.body}
             language="en"
-            relatedExhibitions={randomExhibitions}
             relatedFairs={randomFairs}
           />
         </main>

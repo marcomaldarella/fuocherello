@@ -36,7 +36,7 @@ export default async function NewsPage() {
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
           <div className="pointer-events-none" style={{ paddingTop: "1em", marginBottom: "2.5rem", minHeight: "5rem" }}>
-            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] text-[clamp(3.5rem,10vw,8rem)]">
+            <h1 className="text-center text-[#0000ff] leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 N
               </span>
@@ -75,7 +75,7 @@ export default async function NewsPage() {
                       </h2>
                       {(item.date || item.dateText) && (
                         <span className="lowercase opacity-70">
-                          {item.date ? new Date(item.date).toLocaleDateString("it-IT") : item.dateText}
+                          {item.date ? new Date(item.date).toLocaleDateString("it-IT").replaceAll("/", ".") : item.dateText}
                         </span>
                       )}
                     </div>
