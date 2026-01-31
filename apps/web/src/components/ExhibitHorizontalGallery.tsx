@@ -322,7 +322,7 @@ export function ExhibitHorizontalGallery({
 
         {relatedExhibitions.length > 0 && (
           <div className="w-full" style={{ padding: "0 1em", marginTop: "1em" }}>
-            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-4">
+            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-[1em]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
               </span>
@@ -410,7 +410,7 @@ export function ExhibitHorizontalGallery({
 
         {relatedFairs.length > 0 && (
           <div className="w-full" style={{ padding: "0 1em", marginTop: "1em" }}>
-            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-4">
+            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-[1em]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
               </span>
