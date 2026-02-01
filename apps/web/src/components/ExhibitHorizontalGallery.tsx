@@ -53,6 +53,17 @@ export function ExhibitHorizontalGallery({
 }: ExhibitHorizontalGalleryProps & { body?: any }) {
   const { viewMode } = useViewMode()
   const locale = language === "en" ? "en-US" : "it-IT"
+  const [splashVisible, setSplashVisible] = useState(true)
+  const [splashFading, setSplashFading] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashFading(true)
+      setTimeout(() => setSplashVisible(false), 500)
+    }, 800)
+    return () => clearTimeout(timer)
+  }, [])
+
 
   const baseItems = useMemo(() => {
     const arr: any[] = []
@@ -520,6 +531,19 @@ export function ExhibitHorizontalGallery({
       className="fixed top-0 left-0 w-screen h-[100svh] pb-14 overflow-hidden overflow-y-hidden no-scrollbar animate-fade-in"
       style={{ zIndex: 10 }}
     >
+      {/* Splash overlay */}
+      {splashVisible && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-white"
+          style={{
+            opacity: splashFading ? 0 : 1,
+            transition: 'opacity 0.5s ease-out',
+            pointerEvents: splashFading ? 'none' : 'auto',
+          }}
+        >
+          <img src="/fuocherello.gif" alt="Loading" style={{ width: '120px', height: 'auto' }} />
+        </div>
+      )}
       {/* Barra inferiore: titolo - autore (a sinistra) + link indietro (a destra) */}
       <div className="fixed left-0 right-0 bottom-0 bg-white z-40 flex items-center justify-between py-2 md:py-3" style={{ paddingLeft: '10px', paddingRight: '10px', borderTopLeftRadius: '12px', borderTopRightRadius: '12px' }}>
         {/* Sinistra: titolo - autore */}
@@ -634,6 +658,8 @@ export function ExhibitHorizontalGallery({
           </div>
         )
         })}
+
+
       </div>
       {/* Overlay aggiuntivo rimosso: tutto gestito nella barra inferiore */}
     </div>
