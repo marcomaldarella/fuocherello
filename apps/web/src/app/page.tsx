@@ -41,14 +41,6 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <InfiniteCanvasHome media={canvasImages} />
-      <main className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-        <h1 className="text-[#0000ff] font-medium leading-[0.85] tracking-[-0.05em] text-[clamp(4rem,12vw,10rem)]">
-          <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>
-            F
-          </span>
-          <span className="lowercase">uocherello</span>
-        </h1>
-      </main>
       <Footer language="it" footerText={settings?.footerText} variant="home" />
     </div>
   )
