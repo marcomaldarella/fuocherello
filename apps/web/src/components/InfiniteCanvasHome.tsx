@@ -20,6 +20,17 @@ export function InfiniteCanvasHome({ media }: { media: MediaItem[] }) {
     }
   }, [textureProgress])
 
+  // Fallback: hide splash after 5s even if textures haven't fully loaded
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (splashVisible && !splashFading) {
+        setSplashFading(true)
+        setTimeout(() => setSplashVisible(false), 500)
+      }
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [])
+
   if (!media.length) {
     return null
   }

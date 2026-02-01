@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import type { MediaItem } from "./types";
 
-const MAX_TEXTURE_CACHE = 64;
+const isMobile = typeof navigator !== "undefined" && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+const MAX_TEXTURE_CACHE = isMobile ? 24 : 64;
 const textureCache = new Map<string, THREE.Texture>();
 const loadCallbacks = new Map<string, Set<(tex: THREE.Texture) => void>>();
 const loader = new THREE.TextureLoader();
@@ -46,10 +47,10 @@ export const getTexture = (item: MediaItem, onLoad?: (texture: THREE.Texture) =>
   const texture = loader.load(
     key,
     (tex) => {
-      tex.minFilter = THREE.LinearMipmapLinearFilter;
+      tex.minFilter = isMobile ? THREE.LinearFilter : THREE.LinearMipmapLinearFilter;
       tex.magFilter = THREE.LinearFilter;
-      tex.generateMipmaps = true;
-      tex.anisotropy = 4;
+      tex.generateMipmaps = !isMobile;
+      tex.anisotropy = isMobile ? 1 : 4;
       tex.colorSpace = THREE.SRGBColorSpace;
       tex.needsUpdate = true;
 
