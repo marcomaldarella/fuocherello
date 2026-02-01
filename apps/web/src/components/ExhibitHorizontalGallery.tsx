@@ -229,9 +229,55 @@ export function ExhibitHorizontalGallery({
     }
     el.addEventListener("wheel", onWheel, { passive: false })
 
+    // Touch handling for mobile horizontal scroll
+    let touchStartX = 0
+    let touchStartY = 0
+    let touchStartScroll = 0
+    let isTouchDragging = false
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (initializingRef.current) return
+      touchStartX = e.touches[0].clientX
+      touchStartY = e.touches[0].clientY
+      touchStartScroll = currentScrollRef.current
+      isTouchDragging = false
+    }
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (initializingRef.current) return
+      const dx = e.touches[0].clientX - touchStartX
+      const dy = e.touches[0].clientY - touchStartY
+      // Only handle horizontal drags
+      if (!isTouchDragging && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 5) {
+        isTouchDragging = true
+      }
+      if (!isTouchDragging) return
+      e.preventDefault()
+      const total = setWidth
+      const quintuple = total * 5
+      const maxScroll = Math.max(0, quintuple - (el.clientWidth || 0) - 1)
+      let next = touchStartScroll - dx
+      if (next < 0) next = 0
+      if (next > maxScroll) next = maxScroll
+      targetScrollRef.current = next
+      currentScrollRef.current = next
+      if (innerRef.current) innerRef.current.style.transform = `translateX(-${next}px)`
+    }
+
+    const onTouchEnd = () => {
+      isTouchDragging = false
+    }
+
+    el.addEventListener("touchstart", onTouchStart, { passive: true })
+    el.addEventListener("touchmove", onTouchMove, { passive: false })
+    el.addEventListener("touchend", onTouchEnd, { passive: true })
+
     return () => {
       ro.disconnect()
       el.removeEventListener("wheel", onWheel as any)
+      el.removeEventListener("touchstart", onTouchStart as any)
+      el.removeEventListener("touchmove", onTouchMove as any)
+      el.removeEventListener("touchend", onTouchEnd as any)
       if (rafRef.current) window.cancelAnimationFrame(rafRef.current)
       rafRef.current = null
       if (initTimerRef.current) window.clearTimeout(initTimerRef.current)
