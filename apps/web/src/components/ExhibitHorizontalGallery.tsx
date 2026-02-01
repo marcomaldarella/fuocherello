@@ -283,7 +283,7 @@ export function ExhibitHorizontalGallery({
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
             ) : item.type === "header" ? (
-              <div className="w-full py-6 text-[#0000ff]" style={{ paddingTop: '6em', paddingBottom: '2em' }}>
+              <div className="w-full text-[#0000ff]" style={{ paddingTop: '6em', paddingBottom: '2em' }}>
                 <h1 className="uppercase leading-[0.95] text-[28px] mb-3" style={{ paddingBottom: '1em' }}>
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
@@ -334,7 +334,7 @@ export function ExhibitHorizontalGallery({
         ))}
 
         {relatedExhibitions.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em", marginTop: "3em" }}>
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "3em", marginBottom: "2em" }}>
             <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em]" style={{ paddingBottom: '1em' }}>
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
