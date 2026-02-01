@@ -15,7 +15,7 @@ export function ViewModeSwitch() {
 
   return (
     <div 
-      className="hidden md:block fixed top-4 right-4 z-[9999] text-[#0000ff] rounded-lg"
+      className="fixed top-4 right-4 z-[9999] text-[#0000ff] rounded-lg"
       style={Object.assign({}, glassStyle, { padding: '10px 12px' })}
     >
       <div className="flex items-center gap-2">

@@ -137,7 +137,7 @@ export function ExhibitHorizontalGallery({
 
   useEffect(() => {
     const el = scrollerRef.current
-    if (isMobile || viewMode === "vertical") return // mobile or vertical mode uses native vertical flow
+    if (viewMode === "vertical") return // vertical mode uses native vertical flow
     if (!el || baseItems.length === 0) return
 
     const compute = () => {
@@ -263,7 +263,7 @@ export function ExhibitHorizontalGallery({
   if (!mounted) return null
 
   // Use vertical layout for mobile OR when viewMode is "vertical"
-  if (isMobile || viewMode === "vertical") {
+  if (viewMode === "vertical") {
     // For mobile: title/author at top, images, then text at bottom
     const verticalItems = isMobile ? [
       ...(title || artistsLine ? [{ type: "header" }] : []),
@@ -272,7 +272,7 @@ export function ExhibitHorizontalGallery({
     ] : baseItems; // For desktop vertical, use baseItems as is (images then text)
 
     return (
-      <div className="w-full h-screen overflow-y-scroll animate-fade-in" style={{ paddingBottom: '60px' }}>
+      <div className="w-full h-screen overflow-y-auto animate-fade-in">
         {verticalItems.map((item, idx) => (
           <div key={idx} className="w-full" style={{ padding: '0 1em', marginBottom: item.type === "image" ? '1em' : '0' }}>
             {item.type === "image" ? (
@@ -334,7 +334,7 @@ export function ExhibitHorizontalGallery({
         ))}
 
         {relatedExhibitions.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em" }}>
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "3em" }}>
             <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em]" style={{ paddingBottom: '1em' }}>
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
@@ -422,7 +422,7 @@ export function ExhibitHorizontalGallery({
         )}
 
         {relatedFairs.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em" }}>
+          <div className="w-full" style={{ padding: "0 1em", marginTop: "3em", marginBottom: "2em" }}>
             <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em]" style={{ paddingBottom: '1em' }}>
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
