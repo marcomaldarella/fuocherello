@@ -272,7 +272,7 @@ export function ExhibitHorizontalGallery({
     ] : baseItems; // For desktop vertical, use baseItems as is (images then text)
 
     return (
-      <div className="w-full h-screen overflow-y-auto animate-fade-in">
+      <div className="w-full min-h-screen overflow-y-auto animate-fade-in">
         {verticalItems.map((item, idx) => (
           <div key={idx} className="w-full" style={{ padding: '0 1em', marginBottom: item.type === "image" ? '1em' : '0' }}>
             {item.type === "image" ? (

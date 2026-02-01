@@ -129,7 +129,6 @@ export default async function EnFairDetailPage({ params }: { params: Promise<{ s
             body={displayFair.body}
             language="en"
             relatedFairs={randomFairs}
-            relatedExhibitions={randomExhibitions}
             backHref="/en/fairs"
           />
         </main>

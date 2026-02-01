@@ -139,7 +139,6 @@ export default async function ExhibitionDetailPage({ params }: { params: Promise
             body={displayExhibition.body}
             language="it"
             relatedExhibitions={randomExhibitions}
-            relatedFairs={randomFairs}
             backHref="/mostre"
           />
         </main>

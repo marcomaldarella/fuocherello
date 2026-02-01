@@ -148,7 +148,6 @@ export default async function FairDetailPage({ params }: { params: Promise<{ slu
             body={displayFair.body}
             language="it"
             relatedFairs={randomFairs}
-            relatedExhibitions={randomExhibitions}
             backHref="/fiere"
           />
         </main>
