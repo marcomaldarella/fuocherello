@@ -23,7 +23,7 @@ const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type ==
   translationOf
 }`
 
-const RANDOM_EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
@@ -34,7 +34,7 @@ const RANDOM_EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $langua
   featuredImage
 }`
 
-const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(_updatedAt desc)[0...2]{
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
@@ -84,7 +84,10 @@ async function getRandomExhibitions(currentSlug: string): Promise<Exhibition[]> 
     { language: "it", currentSlug },
     { next: { revalidate: 60 } },
   )
-  return result || []
+  if (!result || result.length === 0) return []
+  // Shuffle and pick 2
+  const shuffled = [...result].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, 2)
 }
 
 async function getRandomFairs() {
@@ -93,7 +96,9 @@ async function getRandomFairs() {
     { language: "it" },
     { next: { revalidate: 60 } },
   )
-  return result || []
+  if (!result || result.length === 0) return []
+  const shuffled = [...result].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, 2)
 }
 
 export default async function ExhibitionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -123,9 +128,10 @@ export default async function ExhibitionDetailPage({ params }: { params: Promise
   return (
     <ViewModeProvider>
       <div className="min-h-screen flex flex-col bg-background">
-
+        <ViewModeSwitch />
         <main className="flex-1 px-0 py-0">
           <ExhibitHorizontalGallery
+            featuredImage={displayExhibition.featuredImage}
             gallery={displayExhibition.gallery || []}
             title={displayExhibition.title}
             artistsLine={displayExhibition.artistsLine || ""}
@@ -133,9 +139,10 @@ export default async function ExhibitionDetailPage({ params }: { params: Promise
             body={displayExhibition.body}
             language="it"
             relatedExhibitions={randomExhibitions}
+            relatedFairs={randomFairs}
+            backHref="/mostre"
           />
         </main>
-        <ViewModeSwitch />
       </div>
     </ViewModeProvider>
   )

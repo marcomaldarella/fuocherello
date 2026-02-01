@@ -26,7 +26,7 @@ import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
 import { ViewModeSwitch } from "@/components/ViewModeSwitch"
 import { ViewModeProvider } from "@/contexts/ViewModeContext"
 
-const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...2]{
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
@@ -38,7 +38,7 @@ const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type ==
   featuredImage
 }`
 
-const RANDOM_EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $language] | order(_updatedAt desc)[0...2]{
+const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && language == $language] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
@@ -99,7 +99,9 @@ async function getRandomFairs(currentSlug: string): Promise<RelatedFair[]> {
     { language: "it", currentSlug },
     { next: { revalidate: 60 } },
   )
-  return result || []
+  if (!result || result.length === 0) return []
+  const shuffled = [...result].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, 2)
 }
 
 async function getRandomExhibitions() {
@@ -108,7 +110,9 @@ async function getRandomExhibitions() {
     { language: "it" },
     { next: { revalidate: 60 } },
   )
-  return result || []
+  if (!result || result.length === 0) return []
+  const shuffled = [...result].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, 2)
 }
 
 export default async function FairDetailPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -136,6 +140,7 @@ export default async function FairDetailPage({ params }: { params: Promise<{ slu
         <ViewModeSwitch />
         <main className="flex-1 px-0 py-0">
           <ExhibitHorizontalGallery
+            featuredImage={displayFair.featuredImage}
             gallery={displayFair.gallery || []}
             title={displayFair.title}
             artistsLine={displayFair.artistsLine || ""}
@@ -143,6 +148,8 @@ export default async function FairDetailPage({ params }: { params: Promise<{ slu
             body={displayFair.body}
             language="it"
             relatedFairs={randomFairs}
+            relatedExhibitions={randomExhibitions}
+            backHref="/fiere"
           />
         </main>
       </div>
