@@ -273,7 +273,20 @@ export function ExhibitHorizontalGallery({
 
     return (
       <div className="w-full min-h-screen overflow-y-auto animate-fade-in">
-        {verticalItems.map((item, idx) => (
+        {isMobile && (title || artistsLine) && (
+          <div className="sticky top-0 z-30 w-full bg-white text-[#0000ff]" style={{ padding: '3em 1em 1em 1em' }}>
+            <h1 className="uppercase leading-[0.95] text-[28px]" style={{ paddingBottom: '0.3em' }}>
+              <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
+                {title?.[0] || ""}
+              </span>
+              <span className="lowercase">{title ? title.slice(1) : ""}</span>
+            </h1>
+            {artistsLine && (
+              <div className="text-[16px] opacity-70 leading-tight">{renderNameList(artistsLine)}</div>
+            )}
+          </div>
+        )}
+        {verticalItems.filter(item => item.type !== "header").map((item, idx) => (
           <div key={idx} className="w-full" style={{ padding: '0 1em', marginBottom: item.type === "image" ? '1em' : '0' }}>
             {item.type === "image" ? (
               <img
@@ -282,18 +295,6 @@ export function ExhibitHorizontalGallery({
                 className="w-full h-auto block animate-fade-in"
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
-            ) : item.type === "header" ? (
-              <div className="w-full text-[#0000ff]" style={{ paddingTop: '6em', paddingBottom: '2em' }}>
-                <h1 className="uppercase leading-[0.95] text-[28px] mb-3" style={{ paddingBottom: '1em' }}>
-                  <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                    {title?.[0] || ""}
-                  </span>
-                  <span className="lowercase">{title ? title.slice(1) : ""}</span>
-                </h1>
-                {artistsLine && (
-                  <div className="text-[16px] opacity-70 leading-tight">{renderNameList(artistsLine)}</div>
-                )}
-              </div>
             ) : item.type === "text" ? (
               <div className="w-full max-w-[800px] mx-auto text-[#0000ff]" style={{ paddingTop: body ? '1.5em' : '0.5em', paddingBottom: '0.5em' }}>
                 {!isMobile && (
