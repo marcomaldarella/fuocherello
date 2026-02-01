@@ -34,6 +34,7 @@ interface ExhibitHorizontalGalleryProps {
   language?: "it" | "en"
   relatedExhibitions?: RelatedItem[]
   relatedFairs?: RelatedItem[]
+  backHref?: string
 }
 
 export function ExhibitHorizontalGallery({
@@ -48,6 +49,7 @@ export function ExhibitHorizontalGallery({
   body,
   relatedExhibitions = [],
   relatedFairs = [],
+  backHref,
 }: ExhibitHorizontalGalleryProps & { body?: any }) {
   const { viewMode } = useViewMode()
   const locale = language === "en" ? "en-US" : "it-IT"
@@ -56,8 +58,8 @@ export function ExhibitHorizontalGallery({
     const arr: any[] = []
     if (featuredImage) arr.push({ type: "image", image: featuredImage })
     if (gallery && gallery.length) arr.push(...gallery.map((g) => ({ type: "image", image: g.image })).filter((x) => x.image))
-    // text slide last after all images (show if body or authorName)
-    if (body || authorName) arr.push({ type: "text" })
+    // text slide: always show (title + optional body)
+    arr.push({ type: "text" })
     return arr
   }, [featuredImage, gallery, body, authorName])
 
@@ -255,7 +257,7 @@ export function ExhibitHorizontalGallery({
     const verticalItems = isMobile ? [
       ...(title || artistsLine ? [{ type: "header" }] : []),
       ...baseItems.filter(item => item.type === "image"),
-      ...(body || authorName ? [{ type: "text" }] : [])
+      { type: "text" }
     ] : baseItems; // For desktop vertical, use baseItems as is (images then text)
 
     return (
@@ -271,7 +273,7 @@ export function ExhibitHorizontalGallery({
               />
             ) : item.type === "header" ? (
               <div className="w-full py-6 text-[#0000ff]" style={{ paddingTop: '6em', paddingBottom: '2em' }}>
-                <h1 className="uppercase leading-[0.95] text-[28px] mb-3">
+                <h1 className="uppercase leading-[0.95] text-[28px] mb-3" style={{ paddingBottom: '1em' }}>
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
                   </span>
@@ -282,10 +284,10 @@ export function ExhibitHorizontalGallery({
                 )}
               </div>
             ) : item.type === "text" ? (
-              <div className="w-full max-w-[800px] mx-auto text-[#0000ff]" style={{ paddingTop: '1.5em', paddingBottom: '0.5em' }}>
+              <div className="w-full max-w-[800px] mx-auto text-[#0000ff]" style={{ paddingTop: body ? '1.5em' : '0.5em', paddingBottom: '0.5em' }}>
                 {!isMobile && (
                   <>
-                    <h1 className="uppercase leading-[0.95] text-[24px] mb-6">
+                    <h1 className="uppercase leading-[0.95] text-[24px] mb-6" style={{ paddingBottom: '1em' }}>
                       <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                         {title?.[0] || ""}
                       </span>
@@ -301,9 +303,9 @@ export function ExhibitHorizontalGallery({
                     <PortableTextRenderer value={body} />
                   </div>
                 )}
-                {authorName && (
-                  <div className="mt-3 text-[13px] opacity-70">
-                    <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
+                {body && authorName && (
+                  <div className="text-[15px] opacity-70" style={{ paddingTop: '1em', paddingBottom: '1em' }}>
+                    <span style={{ marginRight: '1em' }}>{language === 'en' ? 'text by' : 'testo di'}</span>
                     {authorName.split(' ').map((word, i) => (
                       <span key={i}>
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
@@ -321,8 +323,8 @@ export function ExhibitHorizontalGallery({
         ))}
 
         {relatedExhibitions.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em", marginTop: "1em" }}>
-            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-[1em]">
+          <div className="w-full" style={{ padding: "0 1em" }}>
+            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em]" style={{ paddingBottom: '1em' }}>
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
               </span>
@@ -354,7 +356,7 @@ export function ExhibitHorizontalGallery({
                     </div>
                     <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                       <div className="flex items-baseline justify-between gap-4">
-                        <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
+                        <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '0.5em' }}>
                           <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                             {item.title?.[0] ?? ""}
                           </span>
@@ -362,7 +364,7 @@ export function ExhibitHorizontalGallery({
                         </h2>
                         {item.authorName && (
                           <span className="whitespace-nowrap shrink-0">
-                            <span className="opacity-70 mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
+                            <span className="opacity-70" style={{ marginRight: '1em' }}>{language === 'en' ? 'text by' : 'testo di'}</span>
                             {item.authorName.split(" ").map((word, i) => (
                               <span key={i} className="whitespace-nowrap">
                                 <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
@@ -409,8 +411,8 @@ export function ExhibitHorizontalGallery({
         )}
 
         {relatedFairs.length > 0 && (
-          <div className="w-full" style={{ padding: "0 1em", marginTop: "1em" }}>
-            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em] mb-[1em]">
+          <div className="w-full" style={{ padding: "0 1em" }}>
+            <h2 className="text-[#0000ff] text-[clamp(1.5rem,4vw,2rem)] leading-[0.85] tracking-[-0.03em]" style={{ paddingBottom: '1em' }}>
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 {language === "en" ? "O" : "A"}
               </span>
@@ -442,7 +444,7 @@ export function ExhibitHorizontalGallery({
                     </div>
                     <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                       <div className="flex items-baseline justify-between gap-4">
-                        <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
+                        <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '0.5em' }}>
                           <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                             {item.title?.[0] ?? ""}
                           </span>
@@ -450,7 +452,7 @@ export function ExhibitHorizontalGallery({
                         </h2>
                         {item.authorName && (
                           <span className="whitespace-nowrap shrink-0">
-                            <span className="opacity-70 mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
+                            <span className="opacity-70" style={{ marginRight: '1em' }}>{language === 'en' ? 'text by' : 'testo di'}</span>
                             {item.authorName.split(" ").map((word, i) => (
                               <span key={i} className="whitespace-nowrap">
                                 <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
@@ -537,7 +539,7 @@ export function ExhibitHorizontalGallery({
         </div>
         {/* Destra: link indietro */}
         <Link
-          href={language === "it" ? "/esibizioni-e-fiere" : "/en/exhibits"}
+          href={backHref || (language === "it" ? "/mostre" : "/en/exhibitions")}
           className="text-[12px] md:text-[13px]  lowercase hover:opacity-70 transition-opacity"
           style={{ color: '#0000ff' }}
         >
@@ -586,45 +588,46 @@ export function ExhibitHorizontalGallery({
           )
         }
 
-        // text slide (no inner scroll). Title + author at top left, then body below
+        // text slide (fixed, no scroll). Smaller text, 3 columns, author in header
         return (
           <div key={idx} className="h-[100svh] flex-shrink-0 relative" style={{ width: `${w}px` }}>
-            <div className="absolute inset-0 bg-white px-[10px] py-8 text-[#0000ff] flex flex-col" style={{ paddingTop: '10vh', marginLeft: '10px' }}>
-              {/* Title and Author at top left */}
-              <div className="mb-8">
-                <h1 className="uppercase font-medium mb-2" style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)', lineHeight: '1em' }}>
+            <div className="absolute inset-0 bg-white px-[20px] text-[#0000ff] flex flex-col justify-center" style={{ paddingTop: '5vh', paddingBottom: '60px', marginLeft: '10px' }}>
+              {/* Title + artists + text by author */}
+              <div style={{ marginBottom: '1em' }}>
+                <h1 className="uppercase font-medium" style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', lineHeight: '1em', paddingBottom: '0.3em' }}>
                   <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                     {title?.[0] || ""}
                   </span>
                   <span className="lowercase">{title ? title.slice(1) : ""}</span>
                 </h1>
-                {artistsLine && (
-                  <p className="opacity-70" style={{ fontSize: 'clamp(0.9rem, 2vw, 1.5rem)', lineHeight: '1.1em' }}>
-                    {renderNameList(artistsLine)}
-                  </p>
-                )}
+                <div className="opacity-70" style={{ fontSize: 'clamp(0.75rem, 1.5vw, 1rem)', lineHeight: '1.3em' }}>
+                  {artistsLine && (
+                    <span>{renderNameList(artistsLine)}</span>
+                  )}
+                  {artistsLine && body && authorName && (
+                    <span style={{ margin: '0 0.5em' }}>–</span>
+                  )}
+                  {body && authorName && (
+                    <span>
+                      <span style={{ marginRight: '0.5em' }}>{language === 'en' ? 'text by' : 'testo di'}</span>
+                      {authorName.split(' ').map((word, i) => (
+                        <span key={i}>
+                          <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
+                            {word[0]}
+                          </span>
+                          <span className="lowercase">{word.slice(1)}</span>
+                          {i < authorName.split(' ').length - 1 && ' '}
+                        </span>
+                      ))}
+                    </span>
+                  )}
+                </div>
               </div>
 
-              {/* Body content */}
+              {/* Body content — fixed, no scroll, 3 columns, smaller text */}
               {body && (
-                <div className="flex-1 overflow-y-auto" style={{ marginTop: '10px' }}>
-                  <div className="max-w-[80vw] mx-auto ml-[10px] md:ml-[20px] columns-1 md:columns-2" style={{ columnGap: "1.5rem", lineHeight: '1em' }}>
-                    <PortableTextRenderer value={body} />
-                  </div>
-                </div>
-              )}
-              {authorName && (
-                <div className="mt-6 text-[13px] opacity-70 ml-[10px] md:ml-[20px]">
-                  <span className="mr-[0.5em]">{language === 'en' ? 'text by' : 'testo di'}</span>
-                  {authorName.split(' ').map((word, i) => (
-                    <span key={i}>
-                      <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>
-                        {word[0]}
-                      </span>
-                      <span className="lowercase">{word.slice(1)}</span>
-                      {i < authorName.split(' ').length - 1 && ' '}
-                    </span>
-                  ))}
+                <div style={{ fontSize: 'clamp(0.5rem, 0.8vw, 0.7rem)', lineHeight: '1.4', columnCount: 2, columnGap: '1.5rem', columnFill: 'auto', overflow: 'hidden', maxHeight: '65vh', width: `${w - 100}px` }}>
+                  <PortableTextRenderer value={body} />
                 </div>
               )}
             </div>
@@ -633,18 +636,6 @@ export function ExhibitHorizontalGallery({
         })}
       </div>
       {/* Overlay aggiuntivo rimosso: tutto gestito nella barra inferiore */}
-      <style jsx global>{`
-        html, body {
-          overflow-x: hidden;
-          max-width: 100vw;
-        }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .no-scrollbar { overscroll-behavior-x: contain; touch-action: pan-x pan-y; }
-        p {
-          line-height: 1em;
-        }
-      `}</style>
     </div>
   )
 }
