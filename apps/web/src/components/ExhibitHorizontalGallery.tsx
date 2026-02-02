@@ -377,7 +377,7 @@ export function ExhibitHorizontalGallery({
           <div key={idx} className="w-full" style={{ padding: '0 1em', marginBottom: item.type === "image" ? '1em' : '0' }}>
             {item.type === "image" ? (
               <img
-                src={urlFor(item.image).width(2400).url() || "/placeholder.svg"}
+                src={urlFor(item.image).width(1800).quality(85).url() || "/placeholder.svg"}
                 alt={title}
                 className="w-full h-auto block animate-fade-in"
                 style={{ maxWidth: '100%', height: 'auto' }}
@@ -680,10 +680,10 @@ export function ExhibitHorizontalGallery({
               className="h-[100svh] flex-shrink-0 relative"
               style={{ width: `${w}px` }}
             >
-              <div className="absolute inset-0 px-[10px] flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-full h-full relative">
                       <Image
-                        src={urlFor(item.image).url() || "/placeholder.svg"}
+                        src={urlFor(item.image).height(1800).quality(85).url() || "/placeholder.svg"}
                         alt={title}
                         fill
                         className="object-contain animate-fade-in"

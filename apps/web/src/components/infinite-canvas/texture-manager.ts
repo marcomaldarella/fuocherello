@@ -3,7 +3,6 @@ import type { MediaItem } from "./types";
 
 const textureCache = new Map<string, THREE.Texture>();
 const loadCallbacks = new Map<string, Set<(tex: THREE.Texture) => void>>();
-const loader = new THREE.TextureLoader();
 
 const isTextureLoaded = (tex: THREE.Texture): boolean => {
   const img = tex.image as HTMLImageElement | undefined;
@@ -29,31 +28,36 @@ export const getTexture = (item: MediaItem, onLoad?: (texture: THREE.Texture) =>
   if (onLoad) callbacks.add(onLoad);
   loadCallbacks.set(key, callbacks);
 
-  const texture = loader.load(
-    key,
-    (tex) => {
-      tex.minFilter = THREE.LinearMipmapLinearFilter;
-      tex.magFilter = THREE.LinearFilter;
-      tex.generateMipmaps = true;
-      tex.anisotropy = 4;
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.needsUpdate = true;
+  // Create texture manually using HTMLImageElement for better cross-origin support
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  const texture = new THREE.Texture(img);
 
-      loadCallbacks.get(key)?.forEach((cb) => {
-        try {
-          cb(tex);
-        } catch (err) {
-          console.error(`Callback failed: ${JSON.stringify(err)}`);
-        }
-      });
-      loadCallbacks.delete(key);
-    },
-    undefined,
-    (err) => {
-      console.error("Texture load failed:", key, err);
-      loadCallbacks.delete(key);
-    }
-  );
+  img.onload = () => {
+    texture.image = img;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = true;
+    texture.anisotropy = 16;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+
+    loadCallbacks.get(key)?.forEach((cb) => {
+      try {
+        cb(texture);
+      } catch (err) {
+        console.error(`Callback failed: ${JSON.stringify(err)}`);
+      }
+    });
+    loadCallbacks.delete(key);
+  };
+
+  img.onerror = (err) => {
+    console.error("Texture image load failed:", key, err);
+    loadCallbacks.delete(key);
+  };
+
+  img.src = key;
 
   textureCache.set(key, texture);
   return texture;

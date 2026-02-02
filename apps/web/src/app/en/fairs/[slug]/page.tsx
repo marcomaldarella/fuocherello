@@ -2,7 +2,6 @@ import { safeSanityFetch } from "@/lib/sanity.client"
 import { FAIR_BY_SLUG_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 import { FallbackNotice } from "@/components/FallbackNotice"
-import { PortableTextRenderer } from "@/components/PortableTextRenderer"
 import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
 import { ViewModeSwitch } from "@/components/ViewModeSwitch"
 import { ViewModeProvider } from "@/contexts/ViewModeContext"

@@ -46,10 +46,10 @@ async function main() {
 
   for (let i = 0; i < filtered.length; i++) {
     const img = filtered[i]
-    const targetW = 512
+    const targetW = 2048
     const scale = targetW / img.width
     const targetH = Math.round(img.height * scale)
-    const fetchUrl = `${img.url}?w=${targetW}&auto=format&q=75&fm=jpg`
+    const fetchUrl = `${img.url}?w=${targetW}&auto=format&q=85`
 
     const filename = `img-${String(i).padStart(3, "0")}.jpg`
     const filePath = path.join(outDir, filename)

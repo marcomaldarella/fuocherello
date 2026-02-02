@@ -23,7 +23,7 @@ export function CookieBanner() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-[9999] px-4 pb-4 pointer-events-none"
+      className="fixed bottom-0 left-0 right-0 z-[9997] px-4 pb-20 md:pb-4 pointer-events-none"
       style={{ animation: "fadeInUp 0.4s ease-out" }}
     >
       <div
@@ -42,7 +42,7 @@ export function CookieBanner() {
           Questo sito utilizza cookie tecnici e di analisi per migliorare la tua esperienza.
           Continuando la navigazione acconsenti al loro utilizzo.
         </p>
-        <p className="mb-4 opacity-80">
+        <p className="mb-[1em] opacity-80">
           This site uses technical and analytics cookies to improve your experience.
           By continuing to browse you consent to their use.
         </p>
@@ -81,12 +81,6 @@ export function CookieBanner() {
           </button>
         </div>
       </div>
-      <style jsx global>{`
-        @keyframes fadeInUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </div>
   )
 }
