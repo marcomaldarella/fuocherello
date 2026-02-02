@@ -373,8 +373,8 @@ function SceneController({ media, onTextureProgress }: { media: MediaItem[]; onT
           const last = s.lastTouches[0];
 
           if (touch && last) {
-            s.targetVel.x -= (touch.clientX - last.clientX) * 0.06;
-            s.targetVel.y += (touch.clientY - last.clientY) * 0.06;
+            s.targetVel.x -= (touch.clientX - last.clientX) * 0.02;
+            s.targetVel.y += (touch.clientY - last.clientY) * 0.02;
           }
         } else if (touches.length === 2 && s.lastTouchDist > 0) {
           const dist = getTouchDistance(touches);
@@ -547,7 +547,7 @@ export function InfiniteCanvasScene({
   fogColor = "#ffffff",
 }: InfiniteCanvasProps) {
   const isTouchDevice = useIsTouchDevice();
-  const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1 : 1.5);
+  const dpr = Math.min(window.devicePixelRatio || 1, isTouchDevice ? 1.25 : 1.5);
 
   if (!media.length) {
     return null;
@@ -560,7 +560,7 @@ export function InfiniteCanvasScene({
           camera={{ position: [0, 0, INITIAL_CAMERA_Z], fov: cameraFov, near: cameraNear, far: cameraFar }}
           dpr={dpr}
           flat
-          gl={{ antialias: false, powerPreference: "default" }}
+          gl={{ antialias: false, powerPreference: "high-performance" }}
           className={styles.canvas}
         >
           <color attach="background" args={[backgroundColor]} />

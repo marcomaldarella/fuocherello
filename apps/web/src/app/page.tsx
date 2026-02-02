@@ -23,7 +23,7 @@ async function getSiteSettings(): Promise<SiteSettings | null> {
 async function getCanvasImages(): Promise<CanvasImage[]> {
   const images = await safeSanityFetch<CanvasImage[]>(HOME_CANVAS_IMAGES_QUERY, {}, { next: { revalidate: 60 } })
   const filtered = (images || []).filter((img) => img.url && img.width && img.height)
-  
+
   if (!filtered.length) {
     return [
       { url: "https://picsum.photos/800/600?random=1", width: 800, height: 600 },
@@ -31,8 +31,17 @@ async function getCanvasImages(): Promise<CanvasImage[]> {
       { url: "https://picsum.photos/800/600?random=3", width: 800, height: 600 },
     ]
   }
-  
-  return filtered
+
+  // Resize images for canvas use (512px width like reference demo)
+  return filtered.map((img) => {
+    const targetW = 512
+    const scale = targetW / img.width
+    return {
+      url: `${img.url}?w=${targetW}&fm=webp&q=75`,
+      width: targetW,
+      height: Math.round(img.height * scale),
+    }
+  })
 }
 
 export default async function HomePage() {
