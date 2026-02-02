@@ -20,6 +20,7 @@ interface Exhibit {
   dateStart?: string
   dateEnd?: string
   featuredImage?: any
+  lqip?: string
 }
 
 
@@ -41,7 +42,7 @@ export default async function ExhibitsPage() {
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
 
-          <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
+          <div className="pointer-events-none" style={{ paddingTop: "3em", marginBottom: "2.5rem", minHeight: "5rem" }}>
             <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 M
@@ -74,11 +75,12 @@ export default async function ExhibitsPage() {
                       fill
                       className="object-cover"
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      {...(exhibit.lqip ? { placeholder: "blur" as const, blurDataURL: exhibit.lqip } : {})}
                     />
                   </div>
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
                     <div className="flex items-baseline justify-between gap-4">
-                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap">
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '4px' }}>
                         <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                           {exhibit.title?.[0] ?? ""}
                         </span>
@@ -86,7 +88,7 @@ export default async function ExhibitsPage() {
                       </h2>
                       {exhibit.authorName && (
                         <span className="whitespace-nowrap shrink-0">
-                          <span className="opacity-70 mr-[0.5em]">testo di</span>
+                          <span className="opacity-70" style={{ marginRight: '1em' }}>testo di</span>
                           {exhibit.authorName!.split(' ').map((word, i) => (
                             <span key={i} className="whitespace-nowrap">
                               <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>

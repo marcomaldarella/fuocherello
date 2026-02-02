@@ -14,8 +14,10 @@ const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type ==
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   gallery[]{
     image,
+    "lqip": image.asset->metadata.lqip,
     caption
   },
   body,
@@ -31,7 +33,8 @@ const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit
   authorName,
   dateStart,
   dateEnd,
-  featuredImage
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip
 }`
 
 const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(_updatedAt desc)[0...10]{

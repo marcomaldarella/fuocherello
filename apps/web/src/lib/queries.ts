@@ -37,6 +37,7 @@ export const EXHIBITIONS_QUERY = `*[_type == "exhibition" && language == $langua
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   language,
   translationOf
 }`
@@ -52,6 +53,7 @@ export const FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type ==
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   language,
   translationOf
 }`
@@ -68,6 +70,7 @@ export const EXHIBITIONS_AND_FAIRS_QUERY = `*[_type in ["exhibition", "fair"] &&
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   language,
   translationOf
 }`
@@ -82,8 +85,10 @@ export const EXHIBITION_BY_SLUG_QUERY = `*[(_type == "exhibition" || (_type == "
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   gallery[]{
     image,
+    "lqip": image.asset->metadata.lqip,
     caption
   },
   body,
@@ -102,8 +107,10 @@ export const FAIR_BY_SLUG_QUERY = `*[(_type == "fair" || (_type == "exhibit" && 
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   gallery[]{
     image,
+    "lqip": image.asset->metadata.lqip,
     caption
   },
   body,
@@ -123,8 +130,10 @@ export const EXHIBITION_OR_FAIR_BY_SLUG_QUERY = `*[_type in ["exhibition", "fair
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   gallery[]{
     image,
+    "lqip": image.asset->metadata.lqip,
     caption
   },
   body,
@@ -144,8 +153,10 @@ export const EXHIBITION_OR_FAIR_BY_SLUG_FALLBACK_QUERY = `*[_type in ["exhibitio
   dateEnd,
   status,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   gallery[]{
     image,
+    "lqip": image.asset->metadata.lqip,
     caption
   },
   body,
@@ -159,6 +170,7 @@ export const NEWS_QUERY = `*[_type == "newsItem" && language == $language] | ord
   date,
   summaryLine,
   image,
+  "lqip": image.asset->metadata.lqip,
   externalUrl,
   language,
   translationOf
@@ -207,6 +219,7 @@ export const ARTISTS_QUERY = `*[_type == "artist" && language == $language] | or
   title,
   slug,
   featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
   birthYear,
   nationality,
   language,

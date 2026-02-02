@@ -14,6 +14,7 @@ interface Artist {
   title: string
   slug: { current: string }
   featuredImage?: any
+  lqip?: string
   language: string
   birthYear?: number
   nationality?: string
@@ -53,7 +54,7 @@ export default async function EnArtistsPage() {
         <div className="w-full">
           {isFallback && <FallbackNotice language="en" />}
 
-          <div className="pointer-events-none" style={{ paddingTop: "2em", marginBottom: "2.5rem", minHeight: "5rem" }}>
+          <div className="pointer-events-none" style={{ paddingTop: "3em", marginBottom: "2.5rem", minHeight: "5rem" }}>
             <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">
               <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
                 A
@@ -81,11 +82,12 @@ export default async function EnArtistsPage() {
                       fill
                       className="object-cover"
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      {...(artist.lqip ? { placeholder: "blur" as const, blurDataURL: artist.lqip } : {})}
                     />
                   </div>
-                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
+                  <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em", paddingBottom: "6px" }}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] whitespace-nowrap">
+                      <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] whitespace-nowrap" style={{ paddingBottom: '4px' }}>
                         {artist.title?.split(' ').map((word, i) => (
                           <span key={i}>
                             <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>

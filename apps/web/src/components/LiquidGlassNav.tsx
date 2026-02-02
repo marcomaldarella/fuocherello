@@ -84,7 +84,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
     <>
       {/* Desktop nav */}
       <nav
-        className="fixed top-4 left-4 z-[9999] hidden md:flex items-center gap-3 px-5 py-3 pr-10 rounded-lg"
+        className="fixed top-4 left-4 z-[9999] hidden md:flex items-center gap-3 pl-5 pr-12 py-3 rounded-lg"
         style={glassStyle}
       >
         <Link
@@ -93,7 +93,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
           style={{ color: "#0000ff" }}
         >
           <FlameIcon />
-          <span className="text-[15px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
+          <span className="text-[16px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
             <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>F</span>
             <span className="lowercase">uocherello</span>
           </span>
@@ -106,12 +106,12 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-[13px] rounded-lg transition-all duration-200 ${
+              className={`text-[14px] rounded-lg transition-all duration-200 ${
                 isActive
                   ? "bg-[rgba(0,0,255,0.08)]"
                   : "hover:bg-[rgba(0,0,255,0.05)]"
               }`}
-              style={Object.assign({ color: "#0000ff", padding: "4px 0.3em" }, isLast ? { marginRight: "1em" } : {})}
+              style={Object.assign({ color: "#0000ff", padding: "4px 0.3em" }, isLast ? { marginRight: "0.5em" } : {})}
             >
               <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>
                 {item.label[0]}
@@ -131,7 +131,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
       >
         <Link href={homeHref} className="flex items-center gap-2" style={{ color: "#0000ff" }}>
           <FlameIcon />
-          <span className="text-[15px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
+          <span className="text-[16px] tracking-[-0.01em]" style={{ color: "#0000ff" }}>
             <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>F</span>
             <span className="lowercase">uocherello</span>
           </span>
@@ -164,7 +164,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
                   isActive ? "" : "opacity-70 hover:opacity-100"
                 }`}
                 style={{
-                  fontWeight: "normal",
+                  fontWeight: "500",
                   transform: mobileOpen ? "translateY(0)" : `translateY(${20 + i * 8}px)`,
                   opacity: mobileOpen ? (isActive ? 1 : 0.7) : 0,
                   transitionDelay: mobileOpen ? `${80 + i * 50}ms` : "0ms",
@@ -185,7 +185,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
             onClick={() => setMobileOpen(false)}
             className="text-[#0000ff] text-[32px] leading-[1.4] opacity-70 hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"
             style={{
-              fontWeight: "normal",
+              fontWeight: "500",
               transform: mobileOpen ? "translateY(0)" : `translateY(${20 + navItems.length * 8}px)`,
               opacity: mobileOpen ? 0.7 : 0,
               transitionDelay: mobileOpen ? `${80 + navItems.length * 50}ms` : "0ms",

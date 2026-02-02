@@ -8,11 +8,11 @@ import { ViewModeSwitch } from "@/components/ViewModeSwitch"
 import { ViewModeProvider } from "@/contexts/ViewModeContext"
 
 const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
-  _id, title, slug, artistsLine, authorName, dateStart, dateEnd, featuredImage
+  _id, title, slug, artistsLine, authorName, dateStart, dateEnd, featuredImage, "lqip": featuredImage.asset->metadata.lqip
 }`
 
 const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
-  _id, title, slug, venue, artistsLine, authorName, dateStart, dateEnd, featuredImage
+  _id, title, slug, venue, artistsLine, authorName, dateStart, dateEnd, featuredImage, "lqip": featuredImage.asset->metadata.lqip
 }`
 
 export const revalidate = 60

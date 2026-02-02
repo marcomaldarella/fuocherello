@@ -15,7 +15,8 @@ const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit
   authorName,
   dateStart,
   dateEnd,
-  featuredImage
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip
 }`
 
 const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(_updatedAt desc)[0...10]{
@@ -27,7 +28,8 @@ const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type ==
   authorName,
   dateStart,
   dateEnd,
-  featuredImage
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip
 }`
 
 export const revalidate = 60

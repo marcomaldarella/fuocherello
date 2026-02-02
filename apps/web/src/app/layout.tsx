@@ -22,7 +22,7 @@ export default function RootLayout({
 
         <meta name="theme-color" content="#0000ff" />
       </head>
-      <body className={`font-sans bg-white text-[#0000ff] px-3 md:px-4`}>
+      <body className={`font-sans font-medium bg-white text-[#0000ff] px-3 md:px-4`}>
         <LiquidGlassNavWrapper />
         {children}
         <CookieBanner />

@@ -8,6 +8,7 @@ import { useViewMode } from "@/contexts/ViewModeContext"
 
 interface GalleryItem {
   image: any
+  lqip?: string
   caption?: string
 }
 
@@ -21,6 +22,7 @@ interface RelatedItem {
   dateStart?: string
   dateEnd?: string
   featuredImage?: any
+  lqip?: string
 }
 
 interface ExhibitHorizontalGalleryProps {
@@ -451,6 +453,7 @@ export function ExhibitHorizontalGallery({
                         fill
                         className="object-cover"
                         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        {...(item.lqip ? { placeholder: "blur" as const, blurDataURL: item.lqip } : {})}
                       />
                     </div>
                     <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
@@ -539,6 +542,7 @@ export function ExhibitHorizontalGallery({
                         fill
                         className="object-cover"
                         sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                        {...(item.lqip ? { placeholder: "blur" as const, blurDataURL: item.lqip } : {})}
                       />
                     </div>
                     <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
