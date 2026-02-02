@@ -21,9 +21,13 @@ async function main() {
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production"
   const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-03-15"
 
+  const outDir = path.resolve(__dirname, "../public/canvas")
+  fs.mkdirSync(outDir, { recursive: true })
+
   if (!projectId) {
-    console.error("NEXT_PUBLIC_SANITY_PROJECT_ID is not set")
-    process.exit(1)
+    console.warn("NEXT_PUBLIC_SANITY_PROJECT_ID is not set, skipping canvas sync")
+    fs.writeFileSync(path.join(outDir, "manifest.json"), "[]")
+    return
   }
 
   const client = createClient({ projectId, dataset, apiVersion, useCdn: true })
@@ -33,14 +37,12 @@ async function main() {
   const filtered = (images || []).filter((img) => img.url && img.width && img.height).slice(0, 30)
 
   if (!filtered.length) {
-    console.error("No images found")
-    process.exit(1)
+    console.warn("No images found, writing empty manifest")
+    fs.writeFileSync(path.join(outDir, "manifest.json"), "[]")
+    return
   }
 
   console.log(`Found ${filtered.length} images`)
-
-  const outDir = path.resolve(__dirname, "../public/canvas")
-  fs.mkdirSync(outDir, { recursive: true })
 
   const manifest: { url: string; width: number; height: number }[] = []
 
