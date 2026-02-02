@@ -51,10 +51,12 @@ export function ExhibitHorizontalGallery({
   relatedFairs = [],
   backHref,
 }: ExhibitHorizontalGalleryProps & { body?: any }) {
-  const { viewMode } = useViewMode()
+  const { viewMode, setScrollPosition, scrollPosition } = useViewMode()
   const locale = language === "en" ? "en-US" : "it-IT"
   const [splashVisible, setSplashVisible] = useState(true)
   const [splashFading, setSplashFading] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const verticalContainerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,6 +65,26 @@ export function ExhibitHorizontalGallery({
     }, 800)
     return () => clearTimeout(timer)
   }, [])
+
+  // Handle scroll position restoration when switching views
+  useEffect(() => {
+    setIsTransitioning(true)
+    const transitionTimer = setTimeout(() => setIsTransitioning(false), 300)
+    
+    if (viewMode === "vertical" && verticalContainerRef.current) {
+      // Restore vertical scroll position
+      const savedVerticalPos = localStorage.getItem("verticalScrollPos")
+      if (savedVerticalPos) {
+        requestAnimationFrame(() => {
+          if (verticalContainerRef.current) {
+            verticalContainerRef.current.scrollTop = parseInt(savedVerticalPos, 10)
+          }
+        })
+      }
+    }
+    
+    return () => clearTimeout(transitionTimer)
+  }, [viewMode])
 
 
   const baseItems = useMemo(() => {
@@ -308,17 +330,36 @@ export function ExhibitHorizontalGallery({
 
   if (!mounted) return null
 
-  // Use vertical layout for mobile OR when viewMode is "vertical"
-  if (viewMode === "vertical") {
-    // For mobile: title/author at top, images, then text at bottom
-    const verticalItems = isMobile ? [
-      ...(title || artistsLine ? [{ type: "header" }] : []),
-      ...baseItems.filter(item => item.type === "image"),
-      { type: "text" }
-    ] : baseItems; // For desktop vertical, use baseItems as is (images then text)
+  // Precompute vertical items (always, for preloading)
+  const verticalItems = isMobile ? [
+    ...(title || artistsLine ? [{ type: "header" }] : []),
+    ...baseItems.filter(item => item.type === "image"),
+    { type: "text" }
+  ] : baseItems;
 
-    return (
-      <div className="w-full min-h-screen overflow-y-auto animate-fade-in">
+  const isVertical = viewMode === "vertical"
+
+  // Vertical view — always rendered, hidden when horizontal (for preloading correlati)
+  const verticalView = (
+    <div
+      ref={verticalContainerRef}
+      className="w-full min-h-screen overflow-y-auto"
+      style={{
+        opacity: isVertical ? (isTransitioning ? 0.5 : 1) : 0,
+        transition: 'opacity 0.3s ease-out',
+        position: isVertical ? 'relative' : 'fixed',
+        pointerEvents: isVertical ? 'auto' : 'none',
+        zIndex: isVertical ? 10 : -1,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        visibility: isVertical ? 'visible' : 'hidden',
+      }}
+      onScroll={(e) => {
+        setScrollPosition((e.target as HTMLElement).scrollTop)
+      }}
+      >
         {isMobile && (title || artistsLine) && (
           <div className="sticky top-0 z-30 w-full bg-white text-[#0000ff]" style={{ padding: '3em 1em 1em 1em' }}>
             <h1 className="uppercase leading-[0.95] text-[28px]" style={{ paddingBottom: '0.3em' }}>
@@ -569,14 +610,21 @@ export function ExhibitHorizontalGallery({
           </div>
         )}
       </div>
-    )
-  }
+    );
 
   return (
+    <>
+    {verticalView}
     <div
       ref={scrollerRef}
-      className="fixed top-0 left-0 w-screen h-[100svh] pb-14 overflow-hidden overflow-y-hidden no-scrollbar animate-fade-in"
-      style={{ zIndex: 10 }}
+      className="fixed top-0 left-0 w-screen h-[100svh] pb-14 overflow-hidden overflow-y-hidden no-scrollbar"
+      style={{
+        zIndex: isVertical ? -1 : 10,
+        opacity: isVertical ? 0 : (isTransitioning ? 0.5 : 1),
+        transition: 'opacity 0.3s ease-out',
+        pointerEvents: isVertical ? 'none' : 'auto',
+        visibility: isVertical ? 'hidden' : 'visible',
+      }}
     >
       {/* Splash overlay */}
       {splashVisible && (
@@ -706,9 +754,11 @@ export function ExhibitHorizontalGallery({
         )
         })}
 
+        })}
 
       </div>
       {/* Overlay aggiuntivo rimosso: tutto gestito nella barra inferiore */}
     </div>
+    </>
   )
 }

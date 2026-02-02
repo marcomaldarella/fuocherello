@@ -3,6 +3,13 @@
 import * as React from "react"
 import type { MediaItem } from "@/components/infinite-canvas/types"
 
+class ErrorBoundary extends React.Component<{ children: React.ReactNode; onError: (msg: string) => void }, { hasError: boolean }> {
+  constructor(props: any) { super(props); this.state = { hasError: false } }
+  static getDerivedStateFromError() { return { hasError: true } }
+  componentDidCatch(error: any) { this.props.onError(String(error)) }
+  render() { return this.state.hasError ? null : this.props.children }
+}
+
 const LazyInfiniteCanvasScene = React.lazy(
   () => import("@/components/infinite-canvas/scene").then((mod) => ({ default: mod.InfiniteCanvasScene }))
 )
@@ -29,21 +36,30 @@ export function InfiniteCanvasHome({ media }: { media: MediaItem[] }) {
     return () => clearTimeout(timer)
   }, [])
 
+  const [error, setError] = React.useState<string | null>(null)
+
   if (!media.length) {
-    return null
+    return <div className="fixed inset-0 z-50 flex items-center justify-center bg-white text-red-500">No media items</div>
   }
 
   return (
     <>
+      {error && (
+        <div className="fixed top-20 left-4 right-4 z-[9999] bg-red-100 text-red-800 p-4 text-xs rounded" style={{ wordBreak: 'break-all' }}>
+          {error}
+        </div>
+      )}
       {/* Canvas background */}
       <div className="fixed inset-0 z-0">
         <React.Suspense fallback={null}>
+          <ErrorBoundary onError={(e) => setError(e)}>
           <LazyInfiniteCanvasScene
             media={media}
             onTextureProgress={setTextureProgress}
             backgroundColor="#ffffff"
             fogColor="#ffffff"
           />
+          </ErrorBoundary>
         </React.Suspense>
       </div>
 
