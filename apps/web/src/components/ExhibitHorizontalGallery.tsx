@@ -754,8 +754,6 @@ export function ExhibitHorizontalGallery({
         )
         })}
 
-        })}
-
       </div>
       {/* Overlay aggiuntivo rimosso: tutto gestito nella barra inferiore */}
     </div>
