@@ -1,5 +1,6 @@
 {
-  "buildCommand": "cd apps/studio && npm run build",
+  "version": 2,
+  "buildCommand": "pnpm build:studio",
   "outputDirectory": "apps/studio/dist",
   "installCommand": "pnpm install",
   "framework": null
