@@ -316,7 +316,8 @@ export function ExhibitHorizontalGallery({
     // Skip width updates if animating to prevent layout shifts
     if (isAnimatingRef.current) return
 
-    const h = window.innerHeight
+    // Subtract bottom bar height (56px = pb-14)
+    const h = window.innerHeight - 56
     const w = (info.naturalWidth / info.naturalHeight) * h
     setWidths((prev) => {
       const next = prev.length === baseItems.length ? [...prev] : Array(baseItems.length).fill(window.innerWidth)
@@ -681,32 +682,24 @@ export function ExhibitHorizontalGallery({
           return (
             <div
               key={idx}
-              className="h-[100svh] flex-shrink-0 relative"
+              className="h-[100svh] flex-shrink-0 pb-14"
               style={{ width: `${w}px` }}
             >
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-full h-full relative">
-                      <Image
-                        src={urlFor(item.image).height(1800).quality(85).url() || "/placeholder.svg"}
-                        alt={title}
-                        fill
-                        className="object-contain animate-fade-in"
-                        priority={idx < baseItems.length}
-                        loading="eager"
-                        sizes="100vw"
-                        onLoad={(e: any) => {
-                          try {
-                            const tgt = e?.currentTarget || e?.nativeEvent?.target
-                            if (tgt && tgt.naturalWidth && tgt.naturalHeight) {
-                              handleLoaded(baseIdx)({ naturalWidth: tgt.naturalWidth, naturalHeight: tgt.naturalHeight })
-                            }
-                          } catch (err) {
-                            // swallow
-                          }
-                        }}
-                      />
-                </div>
-              </div>
+              <img
+                src={urlFor(item.image).height(1800).quality(85).url() || "/placeholder.svg"}
+                alt={title}
+                className="h-full w-auto block animate-fade-in"
+                onLoad={(e: any) => {
+                  try {
+                    const tgt = e?.currentTarget || e?.nativeEvent?.target
+                    if (tgt && tgt.naturalWidth && tgt.naturalHeight) {
+                      handleLoaded(baseIdx)({ naturalWidth: tgt.naturalWidth, naturalHeight: tgt.naturalHeight })
+                    }
+                  } catch (err) {
+                    // swallow
+                  }
+                }}
+              />
             </div>
           )
         }
