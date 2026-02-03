@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
@@ -7,6 +8,24 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Fiere",
+  description:
+    "Fuocherello alle fiere d'arte. Scultura contemporanea e artisti emergenti dalla Fonderia De Carli di Volvera (TO).",
+  openGraph: {
+    title: "Fiere | Fuocherello",
+    description:
+      "Fuocherello alle fiere d'arte. Scultura contemporanea e artisti emergenti.",
+  },
+  alternates: {
+    canonical: "/fiere",
+    languages: {
+      "it-IT": "/fiere",
+      "en-US": "/en/fairs",
+    },
+  },
+}
 
 interface Fair {
   _id: string

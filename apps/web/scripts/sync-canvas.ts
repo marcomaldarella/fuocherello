@@ -16,6 +16,12 @@ interface CanvasImage {
   height: number
 }
 
+function isValidSanityProjectId(id: string | undefined): id is string {
+  if (!id) return false
+  // Sanity projectId can only contain a-z, 0-9 and dashes
+  return /^[a-z0-9-]+$/.test(id)
+}
+
 async function main() {
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production"
@@ -24,8 +30,8 @@ async function main() {
   const outDir = path.resolve(__dirname, "../public/canvas")
   fs.mkdirSync(outDir, { recursive: true })
 
-  if (!projectId) {
-    console.warn("NEXT_PUBLIC_SANITY_PROJECT_ID is not set, skipping canvas sync")
+  if (!isValidSanityProjectId(projectId)) {
+    console.warn("NEXT_PUBLIC_SANITY_PROJECT_ID is not set or invalid, skipping canvas sync")
     fs.writeFileSync(path.join(outDir, "manifest.json"), "[]")
     return
   }

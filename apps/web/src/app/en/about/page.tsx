@@ -1,9 +1,29 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 import { Footer } from "@/components/Footer"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Fuocherello is a meeting place born within the De Carli Artistic Foundry in Volvera (TO). A polycentric space dedicated to sculpture and artistic experimentation.",
+  openGraph: {
+    title: "About Us | Fuocherello",
+    description:
+      "Fuocherello is a meeting place born within the De Carli Artistic Foundry in Volvera (TO). A polycentric space dedicated to sculpture and artistic experimentation.",
+    locale: "en_US",
+  },
+  alternates: {
+    canonical: "/en/about",
+    languages: {
+      "it-IT": "/about",
+      "en-US": "/en/about",
+    },
+  },
+}
 
 const aboutParagraphs = [
   "Fuocherello is a meeting place born within the De Carli Artistic Foundry in Volvera (TO).",

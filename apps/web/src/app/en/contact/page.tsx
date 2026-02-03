@@ -1,9 +1,29 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 import { Footer } from "@/components/Footer"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Contact Fuocherello. Via 25 Aprile, 37 – Volvera (TO) 10040, Italy. Phone: +39 351 3106014. Email: contact@fuocherello.com",
+  openGraph: {
+    title: "Contact | Fuocherello",
+    description:
+      "Contact Fuocherello. Via 25 Aprile, 37 – Volvera (TO) 10040, Italy. Phone: +39 351 3106014.",
+    locale: "en_US",
+  },
+  alternates: {
+    canonical: "/en/contact",
+    languages: {
+      "it-IT": "/contact",
+      "en-US": "/en/contact",
+    },
+  },
+}
 
 const contactLines = ["Via 25 Aprile, 37 – Volvera", "+39 351 3106014", "contact@fuocherello.com"]
 

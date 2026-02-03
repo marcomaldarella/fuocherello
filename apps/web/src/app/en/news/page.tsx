@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { NEWS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
@@ -7,6 +8,25 @@ import { urlFor } from "@/lib/imageUrl"
 import Image from "next/image"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "News",
+  description:
+    "News, events and updates from Fuocherello. Contemporary art, sculpture and exhibitions in Volvera (TO), Italy.",
+  openGraph: {
+    title: "News | Fuocherello",
+    description:
+      "News, events and updates from Fuocherello. Contemporary art, sculpture and exhibitions.",
+    locale: "en_US",
+  },
+  alternates: {
+    canonical: "/en/news",
+    languages: {
+      "it-IT": "/news",
+      "en-US": "/en/news",
+    },
+  },
+}
 
 interface NewsItem {
   _id: string

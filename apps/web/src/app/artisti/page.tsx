@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { ARTISTS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
@@ -7,6 +8,24 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Artisti",
+  description:
+    "Gli artisti che espongono presso Fuocherello. Scultura contemporanea e sperimentazione artistica alla Fonderia De Carli di Volvera.",
+  openGraph: {
+    title: "Artisti | Fuocherello",
+    description:
+      "Gli artisti che espongono presso Fuocherello. Scultura contemporanea e sperimentazione artistica.",
+  },
+  alternates: {
+    canonical: "/artisti",
+    languages: {
+      "it-IT": "/artisti",
+      "en-US": "/en/artists",
+    },
+  },
+}
 
 interface Artist {
   _id: string

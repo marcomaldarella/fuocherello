@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { EXHIBITIONS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 import { Footer } from "@/components/Footer"
@@ -6,6 +7,24 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Mostre",
+  description:
+    "Scopri le mostre di scultura contemporanea presso Fuocherello, spazio espositivo alla Fonderia Artistica De Carli di Volvera (TO).",
+  openGraph: {
+    title: "Mostre | Fuocherello",
+    description:
+      "Scopri le mostre di scultura contemporanea presso Fuocherello, spazio espositivo alla Fonderia Artistica De Carli.",
+  },
+  alternates: {
+    canonical: "/mostre",
+    languages: {
+      "it-IT": "/mostre",
+      "en-US": "/en/exhibitions",
+    },
+  },
+}
 
 interface Exhibition {
   _id: string

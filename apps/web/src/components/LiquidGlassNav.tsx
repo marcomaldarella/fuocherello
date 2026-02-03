@@ -196,6 +196,31 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
             </span>
             <span className="lowercase">nstagram</span>
           </a>
+
+          {/* Language switch */}
+          <Link
+            href={language === "it" ? "/en" : "/"}
+            onClick={() => setMobileOpen(false)}
+            className="text-[#0000ff] text-[32px] leading-[1.4] opacity-70 hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] mt-4"
+            style={{
+              fontWeight: "500",
+              transform: mobileOpen ? "translateY(0)" : `translateY(${20 + (navItems.length + 1) * 8}px)`,
+              opacity: mobileOpen ? 0.7 : 0,
+              transitionDelay: mobileOpen ? `${80 + (navItems.length + 1) * 50}ms` : "0ms",
+            }}
+          >
+            {language === "it" ? (
+              <>
+                <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>E</span>
+                <span className="lowercase">nglish</span>
+              </>
+            ) : (
+              <>
+                <span className="italic uppercase inline-block" style={{ marginRight: "0.05em" }}>I</span>
+                <span className="lowercase">taliano</span>
+              </>
+            )}
+          </Link>
         </div>
       </div>
     </>

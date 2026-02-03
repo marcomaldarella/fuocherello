@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { ARTISTS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
@@ -8,6 +9,25 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Artists",
+  description:
+    "Artists exhibiting at Fuocherello. Contemporary sculpture and artistic experimentation at the De Carli Foundry in Volvera, Italy.",
+  openGraph: {
+    title: "Artists | Fuocherello",
+    description:
+      "Artists exhibiting at Fuocherello. Contemporary sculpture and artistic experimentation.",
+    locale: "en_US",
+  },
+  alternates: {
+    canonical: "/en/artists",
+    languages: {
+      "it-IT": "/artisti",
+      "en-US": "/en/artists",
+    },
+  },
+}
 
 interface Artist {
   _id: string

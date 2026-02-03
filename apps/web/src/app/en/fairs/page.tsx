@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
@@ -8,6 +9,25 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Fairs",
+  description:
+    "Fuocherello at art fairs. Contemporary sculpture and emerging artists from the De Carli Foundry in Volvera (TO), Italy.",
+  openGraph: {
+    title: "Fairs | Fuocherello",
+    description:
+      "Fuocherello at art fairs. Contemporary sculpture and emerging artists.",
+    locale: "en_US",
+  },
+  alternates: {
+    canonical: "/en/fairs",
+    languages: {
+      "it-IT": "/fiere",
+      "en-US": "/en/fairs",
+    },
+  },
+}
 
 interface Fair {
   _id: string

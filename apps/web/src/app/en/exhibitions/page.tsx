@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { EXHIBITIONS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
@@ -8,6 +9,25 @@ import Image from "next/image"
 import Link from "next/link"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Exhibitions",
+  description:
+    "Discover contemporary sculpture exhibitions at Fuocherello, an exhibition space at the De Carli Artistic Foundry in Volvera (TO), Italy.",
+  openGraph: {
+    title: "Exhibitions | Fuocherello",
+    description:
+      "Discover contemporary sculpture exhibitions at Fuocherello, an exhibition space at the De Carli Artistic Foundry.",
+    locale: "en_US",
+  },
+  alternates: {
+    canonical: "/en/exhibitions",
+    languages: {
+      "it-IT": "/mostre",
+      "en-US": "/en/exhibitions",
+    },
+  },
+}
 
 interface Exhibition {
   _id: string

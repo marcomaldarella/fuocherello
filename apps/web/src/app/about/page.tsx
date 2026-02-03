@@ -1,9 +1,28 @@
+import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 import { Footer } from "@/components/Footer"
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  title: "Chi Siamo",
+  description:
+    "Fuocherello è un luogo di incontro nato all'interno della Fonderia Artistica De Carli di Volvera (TO). Uno spazio policentrico dedicato alla scultura e alla sperimentazione artistica.",
+  openGraph: {
+    title: "Chi Siamo | Fuocherello",
+    description:
+      "Fuocherello è un luogo di incontro nato all'interno della Fonderia Artistica De Carli di Volvera (TO). Uno spazio policentrico dedicato alla scultura e alla sperimentazione artistica.",
+  },
+  alternates: {
+    canonical: "/about",
+    languages: {
+      "it-IT": "/about",
+      "en-US": "/en/about",
+    },
+  },
+}
 
 const aboutParagraphs = [
   "Fuocherello è un luogo di incontro nato all’interno della Fonderia Artistica De Carli di Volvera (TO).",
