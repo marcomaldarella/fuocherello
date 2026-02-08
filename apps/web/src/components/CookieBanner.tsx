@@ -23,7 +23,7 @@ export function CookieBanner() {
 
   return (
     <div
-      className="fixed bottom-0 left-0 right-0 z-[9997] px-4 pb-[84px] md:pb-4 pointer-events-none"
+      className="fixed top-0 left-0 right-0 md:top-auto md:bottom-0 z-[9997] px-4 pt-4 md:pt-0 md:pb-4 pointer-events-none"
       style={{ animation: "fadeInUp 0.4s ease-out" }}
     >
       <div
