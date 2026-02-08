@@ -1,7 +1,0 @@
-{
-  "version": 2,
-  "buildCommand": "pnpm run build:studio",
-  "outputDirectory": "apps/studio/dist",
-  "installCommand": "pnpm install",
-  "framework": null
-}
