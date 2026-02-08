@@ -1,0 +1,5 @@
+{
+  "buildCommand": "pnpm run build:studio",
+  "outputDirectory": "apps/studio/dist",
+  "framework": null
+}

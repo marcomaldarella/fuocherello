@@ -382,6 +382,8 @@ export function ExhibitHorizontalGallery({
               <img
                 src={urlFor(item.image).width(1800).quality(85).url() || "/placeholder.svg"}
                 alt={title}
+                loading="eager"
+                decoding="async"
                 className="w-full h-auto block animate-fade-in"
                 style={{ maxWidth: '100%', height: 'auto' }}
               />
@@ -401,7 +403,7 @@ export function ExhibitHorizontalGallery({
                   </>
                 )}
                 {body && (
-                  <div className="text-[15px] leading-snug">
+                  <div className="text-[15px] leading-relaxed">
                     <PortableTextRenderer value={body} />
                   </div>
                 )}
@@ -688,6 +690,8 @@ export function ExhibitHorizontalGallery({
               <img
                 src={urlFor(item.image).height(1800).quality(85).url() || "/placeholder.svg"}
                 alt={title}
+                loading="eager"
+                decoding="async"
                 className="h-full w-auto block animate-fade-in"
                 onLoad={(e: any) => {
                   try {
