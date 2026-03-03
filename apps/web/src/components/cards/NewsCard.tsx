@@ -51,7 +51,7 @@ export function NewsCard({ item, language, index, isLast }: NewsCardProps) {
           )}
         </div>
         {item.summaryLine && (
-          <div className="opacity-70">
+          <div className="opacity-70 break-words">
             <StyledTitle text={item.summaryLine} firstLetterMargin="0.02em" />
           </div>
         )}
