@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm run build:studio",
-  "outputDirectory": "apps/studio/dist",
-  "framework": null
+  "buildCommand": "pnpm run build:web",
+  "outputDirectory": "apps/web/.next",
+  "framework": "nextjs"
 }
