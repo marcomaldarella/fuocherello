@@ -366,10 +366,19 @@ export function ExhibitHorizontalGallery({
         {isMobile && (title || artistsLine) && (
           <div className="sticky top-0 z-30 w-full bg-white text-[#0000ff]" style={{ padding: '3em 1em 1em 1em' }}>
             <h1 className="uppercase leading-[0.95] text-[28px]" style={{ paddingBottom: '0.3em' }}>
-              <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                {title?.[0] || ""}
-              </span>
-              <span className="lowercase">{title ? title.slice(1) : ""}</span>
+              {(title ?? "").split(' ').map((word, i, arr) =>
+                word === '~' ? (
+                  <span key={i}> ~ </span>
+                ) : (
+                  <span key={i} className="whitespace-nowrap">
+                    <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                      {word[0] ?? ""}
+                    </span>
+                    <span className="lowercase">{word.slice(1)}</span>
+                    {i < arr.length - 1 && ' '}
+                  </span>
+                )
+              )}
             </h1>
             {artistsLine && (
               <div className="text-[16px] opacity-70 leading-tight">{renderNameList(artistsLine)}</div>
@@ -392,10 +401,19 @@ export function ExhibitHorizontalGallery({
                 {!isMobile && (
                   <>
                     <h1 className="uppercase leading-[0.95] text-[24px] mb-6" style={{ paddingBottom: '1em' }}>
-                      <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                        {title?.[0] || ""}
-                      </span>
-                      <span className="lowercase">{title ? title.slice(1) : ""}</span>
+                      {(title ?? "").split(' ').map((word, i, arr) =>
+                        word === '~' ? (
+                          <span key={i}> ~ </span>
+                        ) : (
+                          <span key={i} className="whitespace-nowrap">
+                            <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                              {word[0] ?? ""}
+                            </span>
+                            <span className="lowercase">{word.slice(1)}</span>
+                            {i < arr.length - 1 && ' '}
+                          </span>
+                        )
+                      )}
                     </h1>
                     {artistsLine && (
                       <div className="text-[15px] opacity-70 leading-tight mb-3">{renderNameList(artistsLine)}</div>
@@ -462,10 +480,19 @@ export function ExhibitHorizontalGallery({
                     <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                       <div className="flex items-baseline justify-between gap-4">
                         <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '0.5em' }}>
-                          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                            {item.title?.[0] ?? ""}
-                          </span>
-                          <span className="lowercase">{item.title?.slice(1) ?? ""}</span>
+                          {(item.title ?? "").split(' ').map((word, i, arr) =>
+                          word === '~' ? (
+                            <span key={i}> ~ </span>
+                          ) : (
+                            <span key={i} className="whitespace-nowrap">
+                              <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                                {word[0] ?? ""}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < arr.length - 1 && ' '}
+                            </span>
+                          )
+                        )}
                         </h2>
                         {item.authorName && (
                           <span className="whitespace-nowrap shrink-0">
@@ -551,10 +578,19 @@ export function ExhibitHorizontalGallery({
                     <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em" }}>
                       <div className="flex items-baseline justify-between gap-4">
                         <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '0.5em' }}>
-                          <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                            {item.title?.[0] ?? ""}
-                          </span>
-                          <span className="lowercase">{item.title?.slice(1) ?? ""}</span>
+                          {(item.title ?? "").split(' ').map((word, i, arr) =>
+                          word === '~' ? (
+                            <span key={i}> ~ </span>
+                          ) : (
+                            <span key={i} className="whitespace-nowrap">
+                              <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                                {word[0] ?? ""}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < arr.length - 1 && ' '}
+                            </span>
+                          )
+                        )}
                         </h2>
                         {item.authorName && (
                           <span className="whitespace-nowrap shrink-0">
@@ -651,10 +687,19 @@ export function ExhibitHorizontalGallery({
         {/* Sinistra: titolo - autore */}
         <div className="flex items-baseline text-[#0000ff]">
           <h1 className="uppercase leading-[0.95] text-[13px] md:text-[13px] ">
-            <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-              {title?.[0] || ""}
-            </span>
-            <span className="lowercase">{title ? title.slice(1) : ""}</span>
+            {(title ?? "").split(' ').map((word, i, arr) =>
+              word === '~' ? (
+                <span key={i}> ~ </span>
+              ) : (
+                <span key={i} className="whitespace-nowrap">
+                  <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                    {word[0] ?? ""}
+                  </span>
+                  <span className="lowercase">{word.slice(1)}</span>
+                  {i < arr.length - 1 && ' '}
+                </span>
+              )
+            )}
           </h1>
           {artistsLine && (
             <>
@@ -715,10 +760,19 @@ export function ExhibitHorizontalGallery({
               {/* Title + artists + text by author */}
               <div style={{ marginBottom: '1em' }}>
                 <h1 className="uppercase font-medium" style={{ fontSize: 'clamp(1.8rem, 5vw, 3.5rem)', lineHeight: '1em', paddingBottom: '0.3em' }}>
-                  <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                    {title?.[0] || ""}
-                  </span>
-                  <span className="lowercase">{title ? title.slice(1) : ""}</span>
+                  {(title ?? "").split(' ').map((word, i, arr) =>
+                    word === '~' ? (
+                      <span key={i}> ~ </span>
+                    ) : (
+                      <span key={i} className="whitespace-nowrap">
+                        <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                          {word[0] ?? ""}
+                        </span>
+                        <span className="lowercase">{word.slice(1)}</span>
+                        {i < arr.length - 1 && ' '}
+                      </span>
+                    )
+                  )}
                 </h1>
                 <div className="opacity-70" style={{ fontSize: 'clamp(0.75rem, 1.5vw, 1rem)', lineHeight: '1.3em' }}>
                   {artistsLine && (

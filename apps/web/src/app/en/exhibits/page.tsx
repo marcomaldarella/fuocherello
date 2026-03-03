@@ -1,5 +1,5 @@
 import { safeSanityFetch } from "@/lib/sanity.client"
-import { EXHIBITIONS_AND_FAIRS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
+import { EXHIBITIONS_AND_FAIRS_EN_MERGED_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 import { Footer } from "@/components/Footer"
 import { FallbackNotice } from "@/components/FallbackNotice"
@@ -26,15 +26,9 @@ interface Exhibit {
 }
 
 
-async function getExhibits(): Promise<{ exhibits: Exhibit[]; isFallback: boolean }> {
-  let exhibits = await safeSanityFetch<Exhibit[]>(EXHIBITIONS_AND_FAIRS_QUERY, { language: "en" }, { next: { revalidate: 60 } })
-
-  if (!exhibits || exhibits.length === 0) {
-    exhibits = await safeSanityFetch<Exhibit[]>(EXHIBITIONS_AND_FAIRS_QUERY, { language: "it" }, { next: { revalidate: 60 } })
-    return { exhibits: exhibits || [], isFallback: true }
-  }
-
-  return { exhibits: exhibits || [], isFallback: false }
+async function getExhibits(): Promise<Exhibit[]> {
+  const result = await safeSanityFetch<Exhibit[]>(EXHIBITIONS_AND_FAIRS_EN_MERGED_QUERY, {}, { next: { revalidate: 60 } })
+  return result || []
 }
 
 async function getSettings() {
@@ -42,14 +36,15 @@ async function getSettings() {
 }
 
 export default async function EnExhibitsPage() {
-  const [{ exhibits, isFallback }, settings] = await Promise.all([getExhibits(), getSettings()])
+  const [exhibits, settings] = await Promise.all([getExhibits(), getSettings()])
+  const hasUntranslated = exhibits.some((e) => e.language === "it")
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
 
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
-          {isFallback && <FallbackNotice language="en" />}
+          {hasUntranslated && <FallbackNotice language="en" />}
 
           <div className="pointer-events-none" style={{ paddingTop: "3em", marginBottom: "2.5rem", minHeight: "5rem" }}>
             <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">
@@ -85,10 +80,19 @@ export default async function EnExhibitsPage() {
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight">
                     <div className="flex items-baseline justify-between gap-4">
                       <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '4px' }}>
-                        <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                          {exhibit.title?.[0] ?? ""}
-                        </span>
-                        <span className="lowercase">{exhibit.title?.slice(1) ?? ""}</span>
+                        {(exhibit.title ?? "").split(' ').map((word, i, arr) =>
+                          word === '~' ? (
+                            <span key={i}> ~ </span>
+                          ) : (
+                            <span key={i} className="whitespace-nowrap">
+                              <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                                {word[0] ?? ""}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < arr.length - 1 && ' '}
+                            </span>
+                          )
+                        )}
                       </h2>
                       {exhibit.authorName && (
                         <span className="whitespace-nowrap shrink-0">

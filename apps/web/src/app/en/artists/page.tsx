@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 import { safeSanityFetch } from "@/lib/sanity.client"
-import { ARTISTS_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
+import { ARTISTS_EN_MERGED_QUERY, SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 import { Footer } from "@/components/Footer"
 import { FallbackNotice } from "@/components/FallbackNotice"
@@ -41,15 +41,9 @@ interface Artist {
 }
 
 
-async function getArtists(): Promise<{ artists: Artist[]; isFallback: boolean }> {
-  let artists = await safeSanityFetch<Artist[]>(ARTISTS_QUERY, { language: "en" }, { next: { revalidate: 60 } })
-
-  if (!artists || artists.length === 0) {
-    artists = await safeSanityFetch<Artist[]>(ARTISTS_QUERY, { language: "it" }, { next: { revalidate: 60 } })
-    return { artists: artists || [], isFallback: true }
-  }
-
-  return { artists, isFallback: false }
+async function getArtists(): Promise<Artist[]> {
+  const result = await safeSanityFetch<Artist[]>(ARTISTS_EN_MERGED_QUERY, {}, { next: { revalidate: 60 } })
+  return result || []
 }
 
 async function getSettings() {
@@ -57,7 +51,7 @@ async function getSettings() {
 }
 
 export default async function EnArtistsPage() {
-  const [{ artists: rawArtists, isFallback }, settings] = await Promise.all([getArtists(), getSettings()])
+  const [rawArtists, settings] = await Promise.all([getArtists(), getSettings()])
 
   const artists = Array.from(
     new Map(
@@ -67,12 +61,14 @@ export default async function EnArtistsPage() {
     ).values()
   )
 
+  const hasUntranslated = artists.some((a) => a.language === "it")
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
 
       <main className="flex-1 px-[1em] py-10 md:py-12 pt-14 md:pt-16">
         <div className="w-full">
-          {isFallback && <FallbackNotice language="en" />}
+          {hasUntranslated && <FallbackNotice language="en" />}
 
           <div className="pointer-events-none" style={{ paddingTop: "3em", marginBottom: "2.5rem", minHeight: "5rem" }}>
             <h1 className="text-center text-[#0000ff]  leading-[0.85] tracking-[-0.03em] font-medium text-[clamp(3.5rem,10vw,8rem)]">

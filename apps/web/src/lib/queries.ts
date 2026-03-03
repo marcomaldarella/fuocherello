@@ -214,6 +214,86 @@ export const CONTACT_PAGE_FALLBACK_QUERY = `*[_type == "contactPage" && _id == "
   translationOf
 }`
 
+// Merged queries for English pages: show EN items + IT items without an EN translation
+export const EXHIBITIONS_EN_MERGED_QUERY = `*[_type == "exhibition" && (
+  language == "en" ||
+  (language == "it" && !defined(*[_type == "exhibition" && language == "en" && translationOf._ref == ^._id][0]))
+)] | order(dateStart desc){
+  _id,
+  title,
+  slug,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
+  language
+}`
+
+export const FAIRS_EN_MERGED_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && (
+  language == "en" ||
+  (language == "it" && !defined(*[_type == "fair" && language == "en" && translationOf._ref == ^._id][0]))
+)] | order(dateStart desc){
+  _id,
+  title,
+  slug,
+  venue,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
+  language
+}`
+
+export const EXHIBITIONS_AND_FAIRS_EN_MERGED_QUERY = `*[_type in ["exhibition", "fair"] && (
+  language == "en" ||
+  (language == "it" && !defined(*[_type == ^._type && language == "en" && translationOf._ref == ^._id][0]))
+)] | order(dateStart desc){
+  _id,
+  _type,
+  title,
+  slug,
+  venue,
+  artistsLine,
+  authorName,
+  dateStart,
+  dateEnd,
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
+  language
+}`
+
+export const NEWS_EN_MERGED_QUERY = `*[_type == "newsItem" && (
+  language == "en" ||
+  (language == "it" && !defined(*[_type == "newsItem" && language == "en" && translationOf._ref == ^._id][0]))
+)] | order(date desc){
+  _id,
+  title,
+  date,
+  summaryLine,
+  image,
+  "lqip": image.asset->metadata.lqip,
+  externalUrl,
+  language
+}`
+
+export const ARTISTS_EN_MERGED_QUERY = `*[_type == "artist" && (
+  language == "en" ||
+  (language == "it" && !defined(*[_type == "artist" && language == "en" && translationOf._ref == ^._id][0]))
+)] | order(title asc){
+  _id,
+  title,
+  slug,
+  featuredImage,
+  "lqip": featuredImage.asset->metadata.lqip,
+  birthYear,
+  nationality,
+  language
+}`
+
 export const ARTISTS_QUERY = `*[_type == "artist" && language == $language] | order(title asc){
   _id,
   title,

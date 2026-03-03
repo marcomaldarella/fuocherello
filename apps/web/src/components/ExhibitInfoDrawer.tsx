@@ -122,8 +122,19 @@ export function ExhibitInfoDrawer({ body, language, title, authorName }: Exhibit
                 <div className="flex items-baseline justify-between gap-3">
                   {title && (
                     <div className="uppercase leading-[0.95]">
-                      <span className="italic uppercase">{title[0]}</span>
-                      <span className="lowercase">{title.slice(1)}</span>
+                      {(title ?? "").split(' ').map((word, i, arr) =>
+                        word === '~' ? (
+                          <span key={i}> ~ </span>
+                        ) : (
+                          <span key={i} className="whitespace-nowrap">
+                            <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0" : "0.02em" }}>
+                              {word[0] ?? ""}
+                            </span>
+                            <span className="lowercase">{word.slice(1)}</span>
+                            {i < arr.length - 1 && ' '}
+                          </span>
+                        )
+                      )}
                     </div>
                   )}
                   {authorName && (

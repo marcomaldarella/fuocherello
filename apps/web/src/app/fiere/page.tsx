@@ -91,10 +91,19 @@ export default async function FierePage() {
                   <div className="mt-2 w-full text-[#0000ff]  text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em", paddingBottom: "6px" }}>
                     <div className="flex items-baseline justify-between gap-4">
                       <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: '4px' }}>
-                        <span className="italic uppercase inline-block" style={{ marginRight: "0.07em" }}>
-                          {fair.title?.[0] ?? ""}
-                        </span>
-                        <span className="lowercase">{fair.title?.slice(1) ?? ""}</span>
+                        {(fair.title ?? "").split(' ').map((word, i, arr) =>
+                          word === '~' ? (
+                            <span key={i}> ~ </span>
+                          ) : (
+                            <span key={i} className="whitespace-nowrap">
+                              <span className="italic uppercase inline-block" style={{ marginRight: i === 0 ? "0.07em" : "0.02em" }}>
+                                {word[0] ?? ""}
+                              </span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < arr.length - 1 && ' '}
+                            </span>
+                          )
+                        )}
                       </h2>
                       {fair.authorName && (
                         <span className="whitespace-nowrap shrink-0">
