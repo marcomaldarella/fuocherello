@@ -29,19 +29,19 @@ export function NewsCard({ item, language, index, isLast }: NewsCardProps) {
         <Image
           src={
             item.image
-              ? urlFor(item.image).width(1200).height(900).fit("crop").url() || "/placeholder.svg"
+              ? urlFor(item.image).width(1200).height(900).url() || "/placeholder.svg"
               : `/placeholder.svg?height=900&width=1200&query=contemporary art exhibition news ${index + 1}`
           }
           alt={item.title}
           fill
-          className="object-cover"
+          className="object-contain"
           sizes="(min-width: 768px) 50vw, 100vw"
           {...(item.lqip ? { placeholder: "blur" as const, blurDataURL: item.lqip } : {})}
         />
       </div>
       <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em", paddingBottom: "6px" }}>
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic whitespace-nowrap" style={{ paddingBottom: "4px" }}>
+          <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic" style={{ paddingBottom: "4px" }}>
             <StyledTitle text={item.title} />
           </h2>
           {(item.date || item.dateText) && (

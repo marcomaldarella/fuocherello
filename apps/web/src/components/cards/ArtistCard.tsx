@@ -43,7 +43,7 @@ export function ArtistCard({ item, href, isLast }: ArtistCardProps) {
         </div>
         <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em", paddingBottom: "6px" }}>
           <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] whitespace-nowrap" style={{ paddingBottom: "4px" }}>
+            <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95]" style={{ paddingBottom: "4px" }}>
               <StyledTitle text={item.title} firstLetterMargin="0.02em" />
             </h2>
           </div>
