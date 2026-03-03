@@ -38,8 +38,15 @@ interface Artist {
   language: string
   birthYear?: number
   nationality?: string
+  translationRef?: string
 }
 
+function mergeByLanguage<T extends { _id: string; language: string; translationRef?: string; slug?: { current: string } }>(all: T[]): T[] {
+  const enItems = all.filter((i) => i.language === "en")
+  const coveredItIds = new Set(enItems.map((i) => i.translationRef).filter(Boolean) as string[])
+  const itFallbacks = all.filter((i) => i.language === "it" && !coveredItIds.has(i._id))
+  return [...enItems, ...itFallbacks]
+}
 
 async function getArtists(): Promise<Artist[]> {
   const result = await safeSanityFetch<Artist[]>(ARTISTS_EN_MERGED_QUERY, {}, { next: { revalidate: 60 } })
@@ -53,12 +60,8 @@ async function getSettings() {
 export default async function EnArtistsPage() {
   const [rawArtists, settings] = await Promise.all([getArtists(), getSettings()])
 
-  const artists = Array.from(
-    new Map(
-      (rawArtists || [])
-        .filter((a) => a?.slug?.current)
-        .map((a) => [a.slug.current, a])
-    ).values()
+  const artists = mergeByLanguage(
+    (rawArtists || []).filter((a) => a?.slug?.current)
   )
 
   const hasUntranslated = artists.some((a) => a.language === "it")

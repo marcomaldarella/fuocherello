@@ -37,8 +37,14 @@ interface NewsItem {
   lqip?: string
   externalUrl?: string
   language: string
+  translationRef?: string
 }
 
+function mergeByLanguage<T extends { _id: string; language: string; translationRef?: string }>(all: T[]): T[] {
+  const enItems = all.filter((i) => i.language === "en")
+  const coveredItIds = new Set(enItems.map((i) => i.translationRef).filter(Boolean) as string[])
+  return [...enItems, ...all.filter((i) => i.language === "it" && !coveredItIds.has(i._id))]
+}
 
 async function getNews(): Promise<NewsItem[]> {
   const result = await safeSanityFetch<NewsItem[]>(NEWS_EN_MERGED_QUERY, {}, { next: { revalidate: 60 } })
@@ -50,7 +56,8 @@ async function getSettings() {
 }
 
 export default async function EnNewsPage() {
-  const [news, settings] = await Promise.all([getNews(), getSettings()])
+  const [rawNews, settings] = await Promise.all([getNews(), getSettings()])
+  const news = mergeByLanguage(rawNews || [])
   const hasUntranslated = news.some((n) => n.language === "it")
 
   return (

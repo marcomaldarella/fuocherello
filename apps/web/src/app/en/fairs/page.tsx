@@ -41,6 +41,13 @@ interface Fair {
   featuredImage?: any
   lqip?: string
   language: string
+  translationRef?: string
+}
+
+function mergeByLanguage<T extends { _id: string; language: string; translationRef?: string }>(all: T[]): T[] {
+  const enItems = all.filter((i) => i.language === "en")
+  const coveredItIds = new Set(enItems.map((i) => i.translationRef).filter(Boolean) as string[])
+  return [...enItems, ...all.filter((i) => i.language === "it" && !coveredItIds.has(i._id))]
 }
 
 async function getFairs(): Promise<Fair[]> {
@@ -53,7 +60,8 @@ async function getSettings() {
 }
 
 export default async function EnFairsPage() {
-  const [fairs, settings] = await Promise.all([getFairs(), getSettings()])
+  const [rawFairs, settings] = await Promise.all([getFairs(), getSettings()])
+  const fairs = mergeByLanguage((rawFairs || []).filter((f) => f?.slug?.current))
   const hasUntranslated = fairs.some((f) => f.language === "it")
 
   return (

@@ -214,11 +214,9 @@ export const CONTACT_PAGE_FALLBACK_QUERY = `*[_type == "contactPage" && _id == "
   translationOf
 }`
 
-// Merged queries for English pages: show EN items + IT items without an EN translation
-export const EXHIBITIONS_EN_MERGED_QUERY = `*[_type == "exhibition" && (
-  language == "en" ||
-  (language == "it" && !defined(*[_type == "exhibition" && language == "en" && translationOf._ref == ^._id][0]))
-)] | order(dateStart desc){
+// Queries for English pages: fetch all languages, deduplicate in JS
+// (more reliable than GROQ correlated subqueries with ^._id)
+export const EXHIBITIONS_EN_MERGED_QUERY = `*[_type == "exhibition"] | order(dateStart desc){
   _id,
   title,
   slug,
@@ -228,13 +226,11 @@ export const EXHIBITIONS_EN_MERGED_QUERY = `*[_type == "exhibition" && (
   dateEnd,
   featuredImage,
   "lqip": featuredImage.asset->metadata.lqip,
-  language
+  language,
+  "translationRef": translationOf._ref
 }`
 
-export const FAIRS_EN_MERGED_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && (
-  language == "en" ||
-  (language == "it" && !defined(*[_type == "fair" && language == "en" && translationOf._ref == ^._id][0]))
-)] | order(dateStart desc){
+export const FAIRS_EN_MERGED_QUERY = `*[_type == "fair"] | order(dateStart desc){
   _id,
   title,
   slug,
@@ -245,13 +241,11 @@ export const FAIRS_EN_MERGED_QUERY = `*[(_type == "fair" || (_type == "exhibit" 
   dateEnd,
   featuredImage,
   "lqip": featuredImage.asset->metadata.lqip,
-  language
+  language,
+  "translationRef": translationOf._ref
 }`
 
-export const EXHIBITIONS_AND_FAIRS_EN_MERGED_QUERY = `*[_type in ["exhibition", "fair"] && (
-  language == "en" ||
-  (language == "it" && !defined(*[_type == ^._type && language == "en" && translationOf._ref == ^._id][0]))
-)] | order(dateStart desc){
+export const EXHIBITIONS_AND_FAIRS_EN_MERGED_QUERY = `*[_type in ["exhibition", "fair"]] | order(dateStart desc){
   _id,
   _type,
   title,
@@ -263,13 +257,11 @@ export const EXHIBITIONS_AND_FAIRS_EN_MERGED_QUERY = `*[_type in ["exhibition", 
   dateEnd,
   featuredImage,
   "lqip": featuredImage.asset->metadata.lqip,
-  language
+  language,
+  "translationRef": translationOf._ref
 }`
 
-export const NEWS_EN_MERGED_QUERY = `*[_type == "newsItem" && (
-  language == "en" ||
-  (language == "it" && !defined(*[_type == "newsItem" && language == "en" && translationOf._ref == ^._id][0]))
-)] | order(date desc){
+export const NEWS_EN_MERGED_QUERY = `*[_type == "newsItem"] | order(date desc){
   _id,
   title,
   date,
@@ -277,13 +269,11 @@ export const NEWS_EN_MERGED_QUERY = `*[_type == "newsItem" && (
   image,
   "lqip": image.asset->metadata.lqip,
   externalUrl,
-  language
+  language,
+  "translationRef": translationOf._ref
 }`
 
-export const ARTISTS_EN_MERGED_QUERY = `*[_type == "artist" && (
-  language == "en" ||
-  (language == "it" && !defined(*[_type == "artist" && language == "en" && translationOf._ref == ^._id][0]))
-)] | order(title asc){
+export const ARTISTS_EN_MERGED_QUERY = `*[_type == "artist"] | order(title asc){
   _id,
   title,
   slug,
@@ -291,7 +281,8 @@ export const ARTISTS_EN_MERGED_QUERY = `*[_type == "artist" && (
   "lqip": featuredImage.asset->metadata.lqip,
   birthYear,
   nationality,
-  language
+  language,
+  "translationRef": translationOf._ref
 }`
 
 export const ARTISTS_QUERY = `*[_type == "artist" && language == $language] | order(title asc){

@@ -40,6 +40,13 @@ interface Exhibition {
   featuredImage?: any
   lqip?: string
   language: string
+  translationRef?: string
+}
+
+function mergeByLanguage<T extends { _id: string; language: string; translationRef?: string }>(all: T[]): T[] {
+  const enItems = all.filter((i) => i.language === "en")
+  const coveredItIds = new Set(enItems.map((i) => i.translationRef).filter(Boolean) as string[])
+  return [...enItems, ...all.filter((i) => i.language === "it" && !coveredItIds.has(i._id))]
 }
 
 async function getExhibitions(): Promise<Exhibition[]> {
@@ -54,12 +61,8 @@ async function getSettings() {
 export default async function EnExhibitionsPage() {
   const [rawExhibitions, settings] = await Promise.all([getExhibitions(), getSettings()])
 
-  const exhibitions = Array.from(
-    new Map(
-      (rawExhibitions || [])
-        .filter((ex) => ex?.slug?.current)
-        .map((ex) => [ex.slug.current, ex])
-    ).values()
+  const exhibitions = mergeByLanguage(
+    (rawExhibitions || []).filter((ex) => ex?.slug?.current)
   )
 
   const hasUntranslated = exhibitions.some((ex) => ex.language === "it")
