@@ -63,6 +63,13 @@ export default defineType({
       options: {
         source: "title",
         maxLength: 96,
+        isUnique: async (slug, context) => {
+          const { document, getClient } = context
+          const client = getClient({ apiVersion: "2024-03-15" })
+          const id = document._id.replace(/^drafts\./, "")
+          const query = `!defined(*[!(_id in [$draft, $published]) && slug.current == $slug && language == $language && _type == "exhibition"][0]._id)`
+          return client.fetch(query, { draft: `drafts.${id}`, published: id, slug, language: document.language })
+        },
       },
       validation: (Rule) => Rule.required(),
     }),
