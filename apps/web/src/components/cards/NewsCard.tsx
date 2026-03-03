@@ -65,7 +65,7 @@ export function NewsCard({ item, language, index, isLast }: NewsCardProps) {
         href={item.externalUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="block hover:opacity-90 transition-opacity"
+        className="block overflow-hidden hover:opacity-90 transition-opacity"
         style={isLast ? { paddingBottom: "clamp(2em, 4vw, 3em)" } : undefined}
       >
         {content}
@@ -74,7 +74,7 @@ export function NewsCard({ item, language, index, isLast }: NewsCardProps) {
   }
 
   return (
-    <div className="block" style={isLast ? { paddingBottom: "clamp(2em, 4vw, 3em)" } : undefined}>
+    <div className="block overflow-hidden" style={isLast ? { paddingBottom: "clamp(2em, 4vw, 3em)" } : undefined}>
       {content}
     </div>
   )

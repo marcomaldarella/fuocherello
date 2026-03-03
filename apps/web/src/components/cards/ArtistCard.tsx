@@ -23,7 +23,7 @@ export function ArtistCard({ item, href, isLast }: ArtistCardProps) {
   return (
     <Link
       href={href}
-      className="block hover:opacity-90 transition-opacity"
+      className="block overflow-hidden hover:opacity-90 transition-opacity"
       style={isLast ? { paddingBottom: "clamp(2em, 4vw, 3em)" } : undefined}
     >
       <div className="w-full">
