@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { LanguageSwitchPill } from "./LanguageSwitchPill"
 
 interface FooterProps {
  language: "it" | "en"
@@ -59,35 +59,7 @@ export function Footer({ language, footerText, variant = "default" }: FooterProp
     </div>
    </div>
 
-   {/* Language switch pill */}
-   <div
-    className="hidden md:block fixed right-4 bottom-4 z-50 py-2.5 px-6 text-[#0000ff] text-sm rounded-lg"
-    style={glassStyle}
-   >
-    <div className="flex items-center gap-3" style={{ paddingLeft: "0.5em", paddingRight: "0.5em" }}>
-     {isItalian ? (
-      <>
-       <span className="lowercase px-3 py-1" style={{ opacity: 0.5, pointerEvents: 'none' }}>it</span>
-       <Link
-        href="/en"
-        className="lowercase hover:opacity-70 transition-opacity px-3 py-1"
-       >
-        en
-       </Link>
-      </>
-     ) : (
-      <>
-       <Link
-        href="/"
-        className="lowercase hover:opacity-70 transition-opacity px-3 py-1"
-       >
-        it
-       </Link>
-       <span className="lowercase px-3 py-1" style={{ opacity: 0.5, pointerEvents: 'none' }}>en</span>
-      </>
-     )}
-    </div>
-   </div>
+   <LanguageSwitchPill />
   </>
  )
 }

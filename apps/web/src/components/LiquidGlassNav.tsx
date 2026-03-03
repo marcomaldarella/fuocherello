@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
+import { getAlternatePath } from "@/lib/languagePath"
 
 interface LiquidGlassNavProps {
   language: "it" | "en"
@@ -199,7 +200,7 @@ export function LiquidGlassNav({ language }: LiquidGlassNavProps) {
 
           {/* Language switch */}
           <Link
-            href={language === "it" ? "/en" : "/"}
+            href={getAlternatePath(pathname)}
             onClick={() => setMobileOpen(false)}
             className="text-[#0000ff] text-[32px] leading-[1.4] opacity-70 hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] mt-4"
             style={{

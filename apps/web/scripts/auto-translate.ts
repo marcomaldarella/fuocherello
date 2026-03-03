@@ -1,11 +1,10 @@
 /**
- * Auto-translate Italian Sanity documents to English using Claude API.
+ * Auto-translate Italian Sanity documents to English using Google Translate (free).
  *
  * Required env vars:
  *   NEXT_PUBLIC_SANITY_PROJECT_ID  – Sanity project ID
  *   NEXT_PUBLIC_SANITY_DATASET     – Sanity dataset (default: production)
  *   SANITY_API_TOKEN               – Sanity write token (sanity.io/manage → API → Tokens)
- *   ANTHROPIC_API_KEY              – Anthropic API key (console.anthropic.com)
  *
  * Usage:
  *   pnpm tsx scripts/auto-translate.ts
@@ -19,11 +18,9 @@ const DRY_RUN = process.argv.includes("--dry-run")
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production"
 const token = process.env.SANITY_API_TOKEN
-const anthropicKey = process.env.ANTHROPIC_API_KEY
 
 if (!projectId) { console.error("❌ Missing NEXT_PUBLIC_SANITY_PROJECT_ID"); process.exit(1) }
 if (!token) { console.error("❌ Missing SANITY_API_TOKEN"); process.exit(1) }
-if (!anthropicKey) { console.error("❌ Missing ANTHROPIC_API_KEY"); process.exit(1) }
 
 const client = createClient({
   projectId,
@@ -37,25 +34,30 @@ const client = createClient({
 
 async function translateText(text: string): Promise<string> {
   if (!text?.trim()) return text
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": anthropicKey!,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 2048,
-      messages: [{
-        role: "user",
-        content: `You are a professional translator specialising in art and culture. Translate the following Italian text to English. Return ONLY the translated text with no explanation:\n\n${text}`,
-      }],
-    }),
-  })
-  if (!response.ok) throw new Error(`Anthropic API error: ${response.status} ${response.statusText}`)
+  // Split long text into chunks of 4000 chars to stay within limits
+  if (text.length > 4000) {
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text]
+    let chunk = ""
+    const translated: string[] = []
+    for (const sentence of sentences) {
+      if ((chunk + sentence).length > 4000) {
+        if (chunk) translated.push(await translateText(chunk.trim()))
+        chunk = sentence
+      } else {
+        chunk += sentence
+      }
+    }
+    if (chunk) translated.push(await translateText(chunk.trim()))
+    return translated.join(" ")
+  }
+
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=it&tl=en&dt=t&q=${encodeURIComponent(text)}`
+  const response = await fetch(url)
+  if (!response.ok) throw new Error(`Google Translate error: ${response.status}`)
   const data = await response.json() as any
-  return data.content[0].text.trim()
+  // Response format: [[["translated","original",null,null,10],...],...]
+  const translated = (data[0] as any[]).map((chunk: any) => chunk[0]).join("")
+  return translated.trim()
 }
 
 /** Translate Portable Text blocks (Sanity rich text) */
@@ -155,9 +157,9 @@ async function translateExhibitions() {
       status: doc.status,
       featuredImage: doc.featuredImage,
       gallery: doc.gallery,
+      title: doc.title,              // exhibition name — do NOT translate
       translationMeta: { source: "auto-translate", lastAutoTranslatedAt: new Date().toISOString() },
     }
-    if (doc.title) enDoc.title = await translateText(doc.title)
     if (doc.body) enDoc.body = await translateBlocks(doc.body)
     await upsert(enDoc)
     await delay(500)
@@ -188,9 +190,9 @@ async function translateFairs() {
       status: doc.status,
       featuredImage: doc.featuredImage,
       gallery: doc.gallery,
+      title: doc.title,              // fair name — do NOT translate
       translationMeta: { source: "auto-translate", lastAutoTranslatedAt: new Date().toISOString() },
     }
-    if (doc.title) enDoc.title = await translateText(doc.title)
     if (doc.venue) enDoc.venue = await translateText(doc.venue)
     if (doc.body) enDoc.body = await translateBlocks(doc.body)
     await upsert(enDoc)

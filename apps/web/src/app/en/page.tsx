@@ -1,94 +1,54 @@
-import { safeSanityFetch, isSanityAvailable } from "@/lib/sanity.client"
+import { safeSanityFetch } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY, SiteSettings } from "@/lib/queries"
-
 import { Footer } from "@/components/Footer"
-import { urlFor } from "@/lib/imageUrl"
-import Image from "next/image"
+import dynamic from "next/dynamic"
+import * as fs from "fs"
+import * as path from "path"
+
+const InfiniteCanvasHome = dynamic(
+  () => import("@/components/InfiniteCanvasHome").then((mod) => mod.InfiniteCanvasHome),
+  { ssr: false }
+)
 
 export const revalidate = 60
 
-const mockGalleryImages = [
-  {
-    alt: "Contemporary art gallery space",
-    caption: "Our exhibition space",
-  },
-  {
-    alt: "Modern art exhibition display",
-    caption: "Contemporary works",
-  },
-  {
-    alt: "Contemporary sculpture on display",
-    caption: "Sculptural installations",
-  },
-  {
-    alt: "Visitors viewing art in gallery",
-    caption: "Visit our exhibitions",
-  },
-]
+interface CanvasImage {
+  url: string
+  width: number
+  height: number
+}
 
 async function getSiteSettings(): Promise<SiteSettings | null> {
   return await safeSanityFetch<SiteSettings>(SITE_SETTINGS_QUERY, {}, { next: { revalidate: 60 } })
 }
 
+function getCanvasImages(): CanvasImage[] {
+  const manifestPath = path.join(process.cwd(), "public/canvas/manifest.json")
+  try {
+    const data = fs.readFileSync(manifestPath, "utf-8")
+    const manifest: CanvasImage[] = JSON.parse(data)
+    if (manifest.length > 0) {
+      return manifest.map((img) => ({ ...img, url: `/${img.url}` }))
+    }
+  } catch {
+    // manifest doesn't exist
+  }
+
+  return [
+    { url: "https://picsum.photos/800/600?random=1", width: 800, height: 600 },
+    { url: "https://picsum.photos/800/600?random=2", width: 800, height: 600 },
+    { url: "https://picsum.photos/800/600?random=3", width: 800, height: 600 },
+  ]
+}
+
 export default async function EnHomePage() {
   const settings = await getSiteSettings()
-
-  const title = settings?.title || "Fuocherello"
-  const tagline = settings?.tagline || "Contemporary Art Gallery"
-  const gallery = settings?.homeGallery || []
+  const canvasImages = getCanvasImages()
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-
-      <main className="flex-1 px-6 py-16">
-        <div className="max-w-7xl mx-auto">
-          {!isSanityAvailable && (
-            <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-md text-sm text-amber-800">
-              Fallback mode: configure Sanity environment variables to view real content.
-            </div>
-          )}
-
-          <div className="mb-16 text-center">
-            <h1 className="text-6xl md:text-7xl  mb-4 italic">{title}</h1>
-            <p className="text-xl text-muted-foreground">{tagline}</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {gallery.length > 0
-              ? gallery.map((item, index) => (
-                  <div key={index} className="relative aspect-[4/3] bg-muted overflow-hidden">
-                    {item.image && (
-                      <Image
-                        src={urlFor(item.image).width(1200).height(900).url() || "/placeholder.svg"}
-                        alt={item.alt || ""}
-                        fill
-                        className="object-cover hover:scale-105 transition-transform duration-500"
-                      />
-                    )}
-                    {item.caption && (
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-4 text-sm">
-                        {item.caption}
-                      </div>
-                    )}
-                  </div>
-                ))
-              : mockGalleryImages.map((image, index) => (
-                  <div key={index} className="relative aspect-[4/3] bg-muted overflow-hidden">
-                    <Image
-                      src={`/ceholder-svg-key-2maz1.jpg?key=2maz1&height=900&width=1200`}
-                      alt={image.alt}
-                      fill
-                      className="object-cover hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-4 text-sm">
-                      {image.caption}
-                    </div>
-                  </div>
-                ))}
-          </div>
-        </div>
-      </main>
-      <Footer language="en" footerText={settings?.footerText} />
+      <InfiniteCanvasHome media={canvasImages} />
+      <Footer language="en" footerText={settings?.footerText} variant="home" />
     </div>
   )
 }
