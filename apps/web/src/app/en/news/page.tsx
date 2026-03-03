@@ -112,7 +112,21 @@ export default async function EnNewsPage() {
                         <span className="lowercase opacity-70">{new Date(item.date).toLocaleDateString("en-US").replaceAll("/", ".")}</span>
                       )}
                     </div>
-                    {item.summaryLine && <div className="lowercase opacity-70">{item.summaryLine}</div>}
+                    {item.summaryLine && (
+                      <div className="opacity-70">
+                        {item.summaryLine.split(' ').map((word, i, arr) =>
+                          word === '~' ? (
+                            <span key={i}> ~ </span>
+                          ) : (
+                            <span key={i} className="whitespace-nowrap">
+                              <span className="italic uppercase inline-block" style={{ marginRight: "0.02em" }}>{word[0] ?? ""}</span>
+                              <span className="lowercase">{word.slice(1)}</span>
+                              {i < arr.length - 1 && ' '}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               )
