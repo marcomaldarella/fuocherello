@@ -15,8 +15,8 @@ export function StyledTitle({ text, firstLetterMargin = "0.07em" }: StyledTitleP
               {word[0] ?? ""}
             </span>
             <span className="lowercase">{word.slice(1)}</span>
-            {i < arr.length - 1 && " "}
           </span>
+          {i < arr.length - 1 && " "}
         )
       )}
     </>

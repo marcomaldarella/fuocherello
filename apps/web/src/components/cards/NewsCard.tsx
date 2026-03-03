@@ -41,7 +41,7 @@ export function NewsCard({ item, language, index, isLast }: NewsCardProps) {
       </div>
       <div className="mt-2 w-full text-[#0000ff] text-[12px] md:text-[13px] leading-tight" style={{ paddingTop: "1em", paddingBottom: "6px" }}>
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic" style={{ paddingBottom: "4px" }}>
+          <h2 className="text-[16px] md:text-[17px] uppercase leading-[0.95] first-letter:italic min-w-0" style={{ paddingBottom: "4px" }}>
             <StyledTitle text={item.title} />
           </h2>
           {(item.date || item.dateText) && (
