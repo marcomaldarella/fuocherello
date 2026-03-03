@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "sync-canvas": "npx tsx scripts/sync-canvas.ts"
+    "sync-canvas": "npx tsx scripts/sync-canvas.ts",
+    "translate": "tsx scripts/auto-translate.ts",
+    "translate:dry": "tsx scripts/auto-translate.ts --dry-run"
   },
   "dependencies": {
     "@portabletext/react": "6.0.0",
