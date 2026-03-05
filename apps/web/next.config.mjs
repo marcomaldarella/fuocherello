@@ -1,4 +1,14 @@
 const nextConfig = {
+  async headers() {
+    return [
+      {
+        source: '/studio/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store' },
+        ],
+      },
+    ]
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
