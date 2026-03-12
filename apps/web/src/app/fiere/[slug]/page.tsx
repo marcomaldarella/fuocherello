@@ -2,7 +2,7 @@ import { safeSanityFetch } from "@/lib/sanity.client"
 import { SITE_SETTINGS_QUERY , SiteSettings } from "@/lib/queries"
 
 // Query fair documents (both fair type and legacy exhibit with type=fair)
-const FAIR_BY_SLUG_COMBINED_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && slug.current == $slug && language == $language][0]{
+const FAIR_BY_SLUG_COMBINED_QUERY = `*[(_type == "fair") && slug.current == $slug && language == $language][0]{
   _id,
   title,
   slug,
@@ -28,7 +28,7 @@ import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
 import { ViewModeSwitch } from "@/components/ViewModeSwitch"
 import { ViewModeProvider } from "@/contexts/ViewModeContext"
 
-const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair") && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
@@ -41,7 +41,7 @@ const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type ==
   "lqip": featuredImage.asset->metadata.lqip
 }`
 
-const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && language == $language] | order(_updatedAt desc)[0...10]{
+const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition") && language == $language] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,

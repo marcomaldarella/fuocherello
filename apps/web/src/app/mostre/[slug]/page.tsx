@@ -4,7 +4,7 @@ import { ExhibitHorizontalGallery } from "@/components/ExhibitHorizontalGallery"
 import { ViewModeSwitch } from "@/components/ViewModeSwitch"
 import { ViewModeProvider } from "@/contexts/ViewModeContext"
 
-const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && slug.current == $slug && language == $language][0]{
+const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition") && slug.current == $slug && language == $language][0]{
   _id,
   title,
   slug,
@@ -25,7 +25,7 @@ const EXHIBITION_BY_SLUG_COMBINED_QUERY = `*[(_type == "exhibition" || (_type ==
   translationOf
 }`
 
-const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit" && type == "exhibition")) && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
+const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition") && language == $language && slug.current != $currentSlug] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
@@ -37,7 +37,7 @@ const RANDOM_EXHIBITIONS_QUERY = `*[(_type == "exhibition" || (_type == "exhibit
   "lqip": featuredImage.asset->metadata.lqip
 }`
 
-const RANDOM_FAIRS_QUERY = `*[(_type == "fair" || (_type == "exhibit" && type == "fair")) && language == $language] | order(_updatedAt desc)[0...10]{
+const RANDOM_FAIRS_QUERY = `*[(_type == "fair") && language == $language] | order(_updatedAt desc)[0...10]{
   _id,
   title,
   slug,
